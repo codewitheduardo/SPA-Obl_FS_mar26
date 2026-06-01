@@ -7,8 +7,8 @@ import ComentariosReceta from "../components/recetas/ComentariosReceta.jsx";
 import EncabezadoDetalleReceta from "../components/recetas/EncabezadoDetalleReceta.jsx";
 import IngredientesReceta from "../components/recetas/IngredientesReceta.jsx";
 import PasosReceta from "../components/recetas/PasosReceta.jsx";
-import EstadoVacio from "../components/ui/EstadoVacio.jsx";
-import { guardarRecetaSeleccionada } from "../features/recetas/recetasSlice.js";
+import EstadoVacio from "../components/EstadoVacio.jsx";
+import { guardarRecetaSeleccionada } from "../features/recetasSlice.js";
 
 const idCategoriaReceta = (receta) => receta?.categoriaId?._id || receta?.categoriaId;
 

@@ -9,7 +9,7 @@ import TarjetaMetrica from "../components/dashboard/TarjetaMetrica.jsx";
 import UltimasRecetas from "../components/dashboard/UltimasRecetas.jsx";
 import UltimosComentarios from "../components/dashboard/UltimosComentarios.jsx";
 import UsoPlan from "../components/dashboard/UsoPlan.jsx";
-import EncabezadoPagina from "../components/ui/EncabezadoPagina.jsx";
+import EncabezadoPagina from "../components/EncabezadoPagina.jsx";
 
 const extraerComentariosDeRespuesta = (respuesta) => {
   const cuerpoRespuesta = respuesta.data?.data || respuesta.data;

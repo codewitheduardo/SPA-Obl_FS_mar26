@@ -5,10 +5,10 @@ import { useSearchParams } from "react-router-dom";
 import api from "../api/api.js";
 import FiltrosRecetas from "../components/recetas/FiltrosRecetas.jsx";
 import TarjetaReceta from "../components/recetas/TarjetaReceta.jsx";
-import EncabezadoPagina from "../components/ui/EncabezadoPagina.jsx";
-import EstadoVacio from "../components/ui/EstadoVacio.jsx";
-import MensajeError from "../components/ui/MensajeError.jsx";
-import { actualizarFiltrosRecetas, guardarErrorRecetas, guardarRecetas, iniciarCargaRecetas } from "../features/recetas/recetasSlice.js";
+import EncabezadoPagina from "../components/EncabezadoPagina.jsx";
+import EstadoVacio from "../components/EstadoVacio.jsx";
+import MensajeError from "../components/MensajeError.jsx";
+import { actualizarFiltrosRecetas, guardarErrorRecetas, guardarRecetas, iniciarCargaRecetas } from "../features/recetasSlice.js";
 
 const textoIngredientes = (ingredientes) => (Array.isArray(ingredientes) ? ingredientes.join(" ") : String(ingredientes || ""));
 const idCategoriaReceta = (receta) => receta.categoriaId?._id || receta.categoriaId;

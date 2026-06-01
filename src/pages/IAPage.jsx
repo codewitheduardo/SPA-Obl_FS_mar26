@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import api from "../api/api.js";
 import FormularioIA from "../components/ia/FormularioIA.jsx";
 import ResultadoIA from "../components/ia/ResultadoIA.jsx";
-import EncabezadoPagina from "../components/ui/EncabezadoPagina.jsx";
-import { agregarReceta } from "../features/recetas/recetasSlice.js";
+import EncabezadoPagina from "../components/EncabezadoPagina.jsx";
+import { agregarReceta } from "../features/recetasSlice.js";
 
 const limpiarTextoIA = (texto = "") =>
   String(texto)

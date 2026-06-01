@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import FormularioReceta from "../components/recetas/FormularioReceta.jsx";
 import TarjetaReceta from "../components/recetas/TarjetaReceta.jsx";
-import Boton from "../components/ui/Boton.jsx";
-import EncabezadoPagina from "../components/ui/EncabezadoPagina.jsx";
-import EstadoVacio from "../components/ui/EstadoVacio.jsx";
-import Modal from "../components/ui/Modal.jsx";
+import Boton from "../components/Boton.jsx";
+import EncabezadoPagina from "../components/EncabezadoPagina.jsx";
+import EstadoVacio from "../components/EstadoVacio.jsx";
+import Modal from "../components/Modal.jsx";
 import api from "../api/api.js";
-import { agregarReceta, actualizarReceta, quitarReceta } from "../features/recetas/recetasSlice.js";
+import { agregarReceta, actualizarReceta, quitarReceta } from "../features/recetasSlice.js";
 import ConfirmacionEliminarReceta from "../components/recetas/ConfirmacionEliminarReceta.jsx";
 
 const crearFormDataReceta = (datos) => {

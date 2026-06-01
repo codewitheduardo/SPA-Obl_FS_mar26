@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Boton from "../components/ui/Boton.jsx";
+import Boton from "../components/Boton.jsx";
 
 export default function NoEncontrado() {
   return (

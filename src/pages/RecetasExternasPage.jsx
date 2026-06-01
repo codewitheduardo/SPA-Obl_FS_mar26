@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 import api from "../api/api.js";
 import FiltrosRecetasExternas from "../components/recetasExternas/FiltrosRecetasExternas.jsx";
 import TarjetaRecetaExterna from "../components/recetasExternas/TarjetaRecetaExterna.jsx";
-import EncabezadoPagina from "../components/ui/EncabezadoPagina.jsx";
-import EstadoVacio from "../components/ui/EstadoVacio.jsx";
-import { agregarFavoritoEstado } from "../features/favoritos/favoritosSlice.js";
+import EncabezadoPagina from "../components/EncabezadoPagina.jsx";
+import EstadoVacio from "../components/EstadoVacio.jsx";
+import { agregarFavoritoEstado } from "../features/favoritosSlice.js";
 import { esFavoritoMealDB, extraerCategoriasMealDB, extraerFavoritoMealDB, extraerMeal, extraerMeals, filtrarMealsPorCategoria, obtenerCategoriasDesdeMeals } from "../utils/mealdb.js";
 
 export default function RecetasExternas() {

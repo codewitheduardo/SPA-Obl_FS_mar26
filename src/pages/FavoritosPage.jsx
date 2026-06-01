@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../api/api.js";
 import TarjetaFavorito from "../components/favoritos/TarjetaFavorito.jsx";
-import Boton from "../components/ui/Boton.jsx";
-import EncabezadoPagina from "../components/ui/EncabezadoPagina.jsx";
-import EstadoVacio from "../components/ui/EstadoVacio.jsx";
-import Modal from "../components/ui/Modal.jsx";
-import { quitarFavoritoEstado } from "../features/favoritos/favoritosSlice.js";
+import Boton from "../components/Boton.jsx";
+import EncabezadoPagina from "../components/EncabezadoPagina.jsx";
+import EstadoVacio from "../components/EstadoVacio.jsx";
+import Modal from "../components/Modal.jsx";
+import { quitarFavoritoEstado } from "../features/favoritosSlice.js";
 
 export default function Favoritos() {
   const dispatch = useDispatch();

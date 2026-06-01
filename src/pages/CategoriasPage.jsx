@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import FormularioCategoria from "../components/categorias/FormularioCategoria.jsx";
 import TarjetaCategoria from "../components/categorias/TarjetaCategoria.jsx";
-import Boton from "../components/ui/Boton.jsx";
-import EncabezadoPagina from "../components/ui/EncabezadoPagina.jsx";
-import EstadoVacio from "../components/ui/EstadoVacio.jsx";
-import Modal from "../components/ui/Modal.jsx";
+import Boton from "../components/Boton.jsx";
+import EncabezadoPagina from "../components/EncabezadoPagina.jsx";
+import EstadoVacio from "../components/EstadoVacio.jsx";
+import Modal from "../components/Modal.jsx";
 import api from "../api/api.js";
-import { actualizarCategoria, agregarCategoria, quitarCategoria } from "../features/categorias/categoriasSlice.js";
+import { actualizarCategoria, agregarCategoria, quitarCategoria } from "../features/categoriasSlice.js";
 
 const extraerCategoriaRespuesta = (respuesta) => {
   const cuerpoRespuesta = respuesta.data?.data || respuesta.data;

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/api.js";
 import DetalleRecetaExternaContenido from "../components/recetasExternas/DetalleRecetaExternaContenido.jsx";
-import EstadoVacio from "../components/ui/EstadoVacio.jsx";
+import EstadoVacio from "../components/EstadoVacio.jsx";
 import { extraerMeal } from "../utils/mealdb.js";
 
 export default function DetalleRecetaExterna() {
