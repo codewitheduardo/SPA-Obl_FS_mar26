@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { cerrarSesion } from "../../features/authSlice.js";
+import { cerrarSesion } from "../features/authSlice.js";
 
 const obtenerFotosUsuario = (usuario = {}) =>
   [usuario.foto, usuario.fotoUrl]

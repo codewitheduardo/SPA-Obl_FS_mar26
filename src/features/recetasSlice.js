@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { esRecetaBorrador } from "../../utils/recetas.js";
+import { esRecetaBorrador } from "../utils/recetas.js";
 
 const recetasSlice = createSlice({
   name: "recetas",

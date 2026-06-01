@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import api from "../../api/api.js";
-import { guardarCategorias, guardarErrorCategorias, iniciarCargaCategorias } from "../../features/categoriasSlice.js";
-import { guardarErrorFavoritos, guardarFavoritos, iniciarCargaFavoritos } from "../../features/favoritosSlice.js";
-import { guardarErrorRecetas, guardarMisRecetas, guardarRecetas, iniciarCargaRecetas } from "../../features/recetasSlice.js";
+import api from "../api/api.js";
+import { guardarCategorias, guardarErrorCategorias, iniciarCargaCategorias } from "../features/categoriasSlice.js";
+import { guardarErrorFavoritos, guardarFavoritos, iniciarCargaFavoritos } from "../features/favoritosSlice.js";
+import { guardarErrorRecetas, guardarMisRecetas, guardarRecetas, iniciarCargaRecetas } from "../features/recetasSlice.js";
 import BarraLateral from "./BarraLateral.jsx";
 import BarraSuperior from "./BarraSuperior.jsx";
 

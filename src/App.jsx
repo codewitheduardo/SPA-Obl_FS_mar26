@@ -1,9 +1,9 @@
 import { Provider } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import LayoutDashboard from "./components/layout/LayoutDashboard.jsx";
-import LayoutPublico from "./components/layout/LayoutPublico.jsx";
-import ScrollToTop from "./components/layout/ScrollToTop.jsx";
+import LayoutDashboard from "./components/LayoutDashboard.jsx";
+import LayoutPublico from "./components/LayoutPublico.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import CategoriasPage from "./pages/CategoriasPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";

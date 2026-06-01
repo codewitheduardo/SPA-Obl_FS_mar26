@@ -1,7 +1,7 @@
 import { ImageUp } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import api from "../../api/api.js";
+import api from "../api/api.js";
 
 export default function CajaSubidaImagen({ onChange, onUpload, previewInicial, folder = "uploads", subirAutomaticamente = false }) {
   const [preview, setPreview] = useState(previewInicial);
