@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatearDificultad, obtenerEstilosDificultad } from "../../utils/formateadores.js";
-import Boton from "../ui/Boton.jsx";
-import Insignia from "../ui/Insignia.jsx";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import Boton from "../Boton.jsx";
+import Insignia from "../Insignia.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 import { esRecetaBorrador } from "../../utils/recetas.js";
 
 const camposImagenReceta = ["imagenUrl", "imagen"];

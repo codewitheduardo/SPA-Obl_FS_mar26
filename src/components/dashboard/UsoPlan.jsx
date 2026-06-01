@@ -1,4 +1,4 @@
-import Tarjeta from "../ui/Tarjeta.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 export default function UsoPlan({ plan, usadas, limite, total }) {
   const porcentaje = plan === "premium" ? 100 : Math.min(100, Math.round((usadas / limite) * 100));

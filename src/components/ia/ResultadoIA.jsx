@@ -1,7 +1,7 @@
 import { ChefHat, Clock, RefreshCw, Users, WandSparkles } from "lucide-react";
-import Boton from "../ui/Boton.jsx";
-import EstadoVacio from "../ui/EstadoVacio.jsx";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import Boton from "../Boton.jsx";
+import EstadoVacio from "../EstadoVacio.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 export default function ResultadoIA({ resultado, onUsar, onRegenerar, puedeGuardar = true }) {
   if (!resultado) {

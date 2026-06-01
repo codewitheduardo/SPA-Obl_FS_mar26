@@ -3,10 +3,10 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../../api/api.js";
-import { actualizarUsuarioAutenticado } from "../../features/auth/authSlice.js";
-import Boton from "../ui/Boton.jsx";
-import Insignia from "../ui/Insignia.jsx";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import { actualizarUsuarioAutenticado } from "../../features/authSlice.js";
+import Boton from "../Boton.jsx";
+import Insignia from "../Insignia.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 export default function TarjetaPlan({ plan }) {
   const dispatch = useDispatch();

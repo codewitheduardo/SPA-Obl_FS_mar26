@@ -1,5 +1,5 @@
 import { ExternalLink, Globe2, MessageSquareOff, PencilOff, ShieldCheck } from "lucide-react";
-import Insignia from "../ui/Insignia.jsx";
+import Insignia from "../Insignia.jsx";
 import IngredientesRecetaExterna from "./IngredientesRecetaExterna.jsx";
 
 function obtenerPasos(instrucciones = "") {

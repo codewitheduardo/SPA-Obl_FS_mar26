@@ -1,8 +1,8 @@
 import { ExternalLink, Globe2, Trash2, Utensils } from "lucide-react";
 import { Link } from "react-router-dom";
-import Boton from "../ui/Boton.jsx";
-import Insignia from "../ui/Insignia.jsx";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import Boton from "../Boton.jsx";
+import Insignia from "../Insignia.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 export default function TarjetaFavorito({ favorito, onEliminar }) {
   const nombre = favorito.nombre || "Receta favorita";

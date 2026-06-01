@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, PointElement, LineElement, Filler, Tooltip, Legend);
 

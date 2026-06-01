@@ -1,8 +1,8 @@
 import { Clock, MessageCircle, Share2, User, Users, Utensils } from "lucide-react";
 import { toast } from "react-toastify";
 import { formatearDificultad, obtenerEstilosDificultad } from "../../utils/formateadores.js";
-import Boton from "../ui/Boton.jsx";
-import Insignia from "../ui/Insignia.jsx";
+import Boton from "../Boton.jsx";
+import Insignia from "../Insignia.jsx";
 
 export default function EncabezadoDetalleReceta({ receta, categoria }) {
   const imagen = receta.imagenUrl || receta.imagen;

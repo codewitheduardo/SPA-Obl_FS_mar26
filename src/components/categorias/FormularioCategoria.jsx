@@ -1,9 +1,9 @@
 import { joiResolver } from "@hookform/resolvers/joi";
 import { Save, Tags } from "lucide-react";
 import { useForm } from "react-hook-form";
-import AreaTexto from "../ui/AreaTexto.jsx";
-import Boton from "../ui/Boton.jsx";
-import CampoTexto from "../ui/CampoTexto.jsx";
+import AreaTexto from "../AreaTexto.jsx";
+import Boton from "../Boton.jsx";
+import CampoTexto from "../CampoTexto.jsx";
 import { categoriaSchema } from "../../validators/categorias.validators.js";
 
 export default function FormularioCategoria({ categoriaInicial, onSubmit }) {

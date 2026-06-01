@@ -3,8 +3,8 @@ import { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { cerrarSesion } from "../../features/auth/authSlice.js";
-import Boton from "../ui/Boton.jsx";
+import { cerrarSesion } from "../../features/authSlice.js";
+import Boton from "../Boton.jsx";
 
 const enlaces = [
   { to: "/dashboard", texto: "Dashboard", icono: Home },

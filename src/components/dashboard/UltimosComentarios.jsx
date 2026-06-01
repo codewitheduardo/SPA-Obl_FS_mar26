@@ -1,8 +1,8 @@
 import { ArrowRight, MessageCircle, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatearFecha } from "../../utils/formateadores.js";
-import EstadoVacio from "../ui/EstadoVacio.jsx";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import EstadoVacio from "../EstadoVacio.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 const obtenerEtiquetaValoracion = (valoracion) => {
   if (valoracion >= 5) return { texto: "Excelente", clases: "bg-emerald-50 text-emerald-700" };

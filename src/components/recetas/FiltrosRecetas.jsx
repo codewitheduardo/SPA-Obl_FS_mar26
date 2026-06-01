@@ -1,7 +1,7 @@
 import { Filter, RotateCcw } from "lucide-react";
-import Boton from "../ui/Boton.jsx";
-import CampoTexto from "../ui/CampoTexto.jsx";
-import Selector from "../ui/Selector.jsx";
+import Boton from "../Boton.jsx";
+import CampoTexto from "../CampoTexto.jsx";
+import Selector from "../Selector.jsx";
 
 export default function FiltrosRecetas({ filtros, categorias, onChange }) {
   const limpiarFiltros = () => {

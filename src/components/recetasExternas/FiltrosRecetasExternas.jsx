@@ -1,6 +1,6 @@
 import { Search, Shuffle } from "lucide-react";
-import Boton from "../ui/Boton.jsx";
-import CampoTexto from "../ui/CampoTexto.jsx";
+import Boton from "../Boton.jsx";
+import CampoTexto from "../CampoTexto.jsx";
 
 export default function FiltrosRecetasExternas({ filtros, onChange, onBuscar, onAleatoria }) {
   return (

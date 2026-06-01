@@ -1,6 +1,6 @@
 import { Edit, Tag, Trash2 } from "lucide-react";
-import Boton from "../ui/Boton.jsx";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import Boton from "../Boton.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 export default function TarjetaCategoria({ categoria, editable, onEditar, onEliminar }) {
   return (

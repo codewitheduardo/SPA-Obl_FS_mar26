@@ -2,11 +2,11 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { Image, ListChecks, Plus, Save, Settings2, Trash2, Utensils } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import AreaTexto from "../ui/AreaTexto.jsx";
-import Boton from "../ui/Boton.jsx";
-import CajaSubidaImagen from "../ui/CajaSubidaImagen.jsx";
-import CampoTexto from "../ui/CampoTexto.jsx";
-import Selector from "../ui/Selector.jsx";
+import AreaTexto from "../AreaTexto.jsx";
+import Boton from "../Boton.jsx";
+import CajaSubidaImagen from "../CajaSubidaImagen.jsx";
+import CampoTexto from "../CampoTexto.jsx";
+import Selector from "../Selector.jsx";
 import { recetaSchema } from "../../validators/recetas.validators.js";
 import { obtenerEstadoReceta } from "../../utils/recetas.js";
 

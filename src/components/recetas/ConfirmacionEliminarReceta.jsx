@@ -1,5 +1,5 @@
 import { AlertTriangle, Clock, Trash2, Users } from "lucide-react";
-import Boton from "../ui/Boton.jsx";
+import Boton from "../Boton.jsx";
 
 export default function ConfirmacionEliminarReceta({ receta, onCancelar, onConfirmar, cargando = false }) {
   return (

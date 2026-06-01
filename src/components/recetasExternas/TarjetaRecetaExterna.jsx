@@ -1,8 +1,8 @@
 import { BadgeCheck, Globe2, Heart, Search, Utensils } from "lucide-react";
 import { Link } from "react-router-dom";
-import Boton from "../ui/Boton.jsx";
-import Insignia from "../ui/Insignia.jsx";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import Boton from "../Boton.jsx";
+import Insignia from "../Insignia.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 export default function TarjetaRecetaExterna({ receta, esFavorita, onFavorito }) {
   const imagen = receta.strMealThumb || "https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=900&q=80";

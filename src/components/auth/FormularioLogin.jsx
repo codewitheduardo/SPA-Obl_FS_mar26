@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../../api/api.js";
-import { guardarErrorAuth, guardarSesion, iniciarCargaAuth } from "../../features/auth/authSlice.js";
+import { guardarErrorAuth, guardarSesion, iniciarCargaAuth } from "../../features/authSlice.js";
 import Boton from "../Boton.jsx";
 import BotonGoogle from "./BotonGoogle.jsx";
-import CampoTexto from "../ui/CampoTexto.jsx";
-import MensajeError from "../ui/MensajeError.jsx";
+import CampoTexto from "../CampoTexto.jsx";
+import MensajeError from "../MensajeError.jsx";
 import { loginSchema } from "../../validators/auth.validators.js";
 
 export default function FormularioLogin() {

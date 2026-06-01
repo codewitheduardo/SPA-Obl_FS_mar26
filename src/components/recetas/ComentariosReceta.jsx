@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../../api/api.js";
 import { comentarioSchema } from "../../validators/comentarios.validators.js";
-import AreaTexto from "../ui/AreaTexto.jsx";
-import Boton from "../ui/Boton.jsx";
-import MensajeError from "../ui/MensajeError.jsx";
+import AreaTexto from "../AreaTexto.jsx";
+import Boton from "../Boton.jsx";
+import MensajeError from "../MensajeError.jsx";
 import { formatearFecha } from "../../utils/formateadores.js";
 
 const obtenerEtiquetaValoracion = (valoracion) => {

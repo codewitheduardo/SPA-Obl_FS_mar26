@@ -1,9 +1,9 @@
 import { ArrowRight, Clock, ChefHat, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatearDificultad, formatearFecha, obtenerEstilosDificultad } from "../../utils/formateadores.js";
-import EstadoVacio from "../ui/EstadoVacio.jsx";
-import Insignia from "../ui/Insignia.jsx";
-import Tarjeta from "../ui/Tarjeta.jsx";
+import EstadoVacio from "../EstadoVacio.jsx";
+import Insignia from "../Insignia.jsx";
+import Tarjeta from "../Tarjeta.jsx";
 
 export default function UltimasRecetas({ recetas }) {
   const ultimas = recetas.slice(0, 4);
