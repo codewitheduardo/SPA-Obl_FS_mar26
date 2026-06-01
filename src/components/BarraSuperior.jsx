@@ -3,20 +3,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { URL_BACKEND } from "../../api/api.js";
 import { cerrarSesion } from "../../features/auth/authSlice.js";
-
-const normalizarUrlFoto = (url = "") => {
-  if (!url) return "";
-  if (url.startsWith("http") || url.startsWith("blob:") || url.startsWith("data:")) return url;
-  if (url.startsWith("//")) return `https:${url}`;
-
-  return `${URL_BACKEND}${url.startsWith("/") ? "" : "/"}${url}`;
-};
 
 const obtenerFotosUsuario = (usuario = {}) =>
   [usuario.foto, usuario.fotoUrl]
-    .map(normalizarUrlFoto)
     .filter(Boolean)
     .filter((url, indice, lista) => lista.indexOf(url) === indice);
 

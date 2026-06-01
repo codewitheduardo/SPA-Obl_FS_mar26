@@ -2,7 +2,6 @@ import { ChefHat, Clock, Edit, Eye, MessageCircle, Share2, Trash2, Users, Utensi
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { URL_BACKEND } from "../../api/api.js";
 import { formatearDificultad, obtenerEstilosDificultad } from "../../utils/formateadores.js";
 import Boton from "../ui/Boton.jsx";
 import Insignia from "../ui/Insignia.jsx";
@@ -15,14 +14,7 @@ const camposFotoUsuario = ["foto", "fotoUrl"];
 
 const obtenerPrimerCampo = (objeto, campos) => campos.map((campo) => objeto?.[campo]).find(Boolean);
 
-const normalizarUrlImagen = (url = "") => {
-  if (!url) return "";
-  if (url.startsWith("http") || url.startsWith("blob:") || url.startsWith("data:")) return url;
-
-  return `${URL_BACKEND}${url.startsWith("/") ? "" : "/"}${url}`;
-};
-
-const obtenerUrlImagen = (receta) => normalizarUrlImagen(obtenerPrimerCampo(receta, camposImagenReceta));
+const obtenerUrlImagen = (receta) => obtenerPrimerCampo(receta, camposImagenReceta) || "";
 
 const obtenerUsuarioReceta = (receta) =>
   camposUsuarioReceta.map((campo) => receta?.[campo]).find((usuario) => usuario && typeof usuario === "object") || null;
@@ -36,7 +28,6 @@ const obtenerIdUsuarioReceta = (receta) => {
 const obtenerFotosUsuario = (usuario = {}) =>
   camposFotoUsuario
     .map((campo) => usuario?.[campo])
-    .map(normalizarUrlImagen)
     .filter(Boolean)
     .filter((url, indice, lista) => lista.indexOf(url) === indice);
 

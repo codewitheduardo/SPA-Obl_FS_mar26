@@ -8,36 +8,8 @@ import Boton from "../ui/Boton.jsx";
 import Insignia from "../ui/Insignia.jsx";
 import Tarjeta from "../ui/Tarjeta.jsx";
 
-const extraerUrlFoto = (valor) => {
-  if (!valor) return "";
-  if (typeof valor === "string") return valor;
-  if (typeof valor !== "object") return "";
-  return extraerUrlFoto(valor.url || valor.secure_url || valor.src || valor.path || valor.picture || valor.imageUrl || valor.fotoUrl || valor.photoURL || valor.photoUrl);
-};
-
-const normalizarUrlFoto = (valor) => {
-  const url = extraerUrlFoto(valor).trim();
-  if (!url || url === "[object Object]") return "";
-  if (url.startsWith("http") || url.startsWith("blob:") || url.startsWith("data:")) return url;
-  if (url.startsWith("//")) return `https:${url}`;
-
-  const baseUrl = import.meta.env.VITE_API_URL?.replace(/\/v1\/?$/, "") || "https://obl-full-stack-back-end.vercel.app";
-  return `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
-};
-
 const obtenerFotosUsuario = (usuario = {}) =>
-  [
-    usuario.foto,
-    usuario.fotoUrl,
-    usuario.picture,
-    usuario.imageUrl,
-    usuario.imagenUrl,
-    usuario.avatarUrl,
-    usuario.avatar,
-    usuario.photoURL,
-    usuario.photoUrl,
-  ]
-    .map(normalizarUrlFoto)
+  [usuario.foto, usuario.fotoUrl]
     .filter(Boolean)
     .filter((url, indice, lista) => lista.indexOf(url) === indice);
 
@@ -53,7 +25,7 @@ export default function TarjetaPerfil({ usuario }) {
 
   useEffect(() => {
     setIndiceFoto(0);
-  }, [usuario.foto, usuario.fotoUrl, usuario.picture, usuario.imageUrl, usuario.imagenUrl, usuario.avatarUrl, usuario.avatar, usuario.photoURL, usuario.photoUrl]);
+  }, [usuario.foto, usuario.fotoUrl]);
 
   const seleccionarArchivo = (archivo) => {
     if (!archivo) return;

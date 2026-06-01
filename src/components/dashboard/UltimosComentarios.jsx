@@ -16,8 +16,6 @@ const obtenerFotoUsuarioComentario = (comentario) => {
   return (
     usuario.fotoUrl ||
     usuario.foto ||
-    usuario.imagenUrl ||
-    usuario.avatarUrl ||
     comentario.usuarioFoto ||
     comentario.fotoUsuario ||
     ""
