@@ -9,7 +9,6 @@ import EncabezadoPagina from "../components/ui/EncabezadoPagina.jsx";
 import EstadoVacio from "../components/ui/EstadoVacio.jsx";
 import MensajeError from "../components/ui/MensajeError.jsx";
 import { actualizarFiltrosRecetas, guardarErrorRecetas, guardarRecetas, iniciarCargaRecetas } from "../features/recetas/recetasSlice.js";
-import { esRecetaBorrador } from "../utils/recetas.js";
 
 const textoIngredientes = (ingredientes) => (Array.isArray(ingredientes) ? ingredientes.join(" ") : String(ingredientes || ""));
 const idCategoriaReceta = (receta) => receta.categoriaId?._id || receta.categoriaId;
@@ -76,10 +75,7 @@ export default function Recetas() {
 
     cargarUsuarios();
   }, []);
-  const idsBorrador = new Set(misRecetas.filter(esRecetaBorrador).map((receta) => receta._id || receta.id));
   const recetasFiltradas = items.filter((receta) =>
-    !esRecetaBorrador(receta) &&
-    !idsBorrador.has(receta._id || receta.id) &&
     (!busquedaGeneral ||
       receta.titulo.toLowerCase().includes(busquedaGeneral) ||
       textoIngredientes(receta.ingredientes).toLowerCase().includes(busquedaGeneral) ||
