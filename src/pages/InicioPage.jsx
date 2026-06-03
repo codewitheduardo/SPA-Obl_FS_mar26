@@ -1,4 +1,4 @@
-import { ChefHat, Sparkles, BookOpen } from "lucide-react";
+import { ChefHat, Sparkles, BookOpen, Clock, Users, ChefHat as ChefIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Boton from "../components/Boton.jsx";
 
@@ -61,17 +61,45 @@ export default function Inicio() {
 
       {/* Imagen */}
       <div className="relative z-10 w-full max-w-md shrink-0 lg:max-w-[480px]">
-        <div className="relative overflow-hidden rounded-3xl shadow-[0_24px_60px_-10px_rgba(0,0,0,0.18)]">
+        <div className="relative overflow-hidden rounded-3xl shadow-[0_24px_60px_-10px_rgba(0,0,0,0.20)]">
           <img
             className="h-72 w-full object-cover sm:h-96 lg:h-[540px]"
-            src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=900&q=80"
+            src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=900&q=80"
             alt="Mesa con ingredientes frescos"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-stone-950/20 to-transparent" />
+
+          {/* Badge superior */}
+          <div className="absolute left-4 top-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/90 px-3 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+              <Sparkles size={11} />
+              Receta destacada
+            </span>
+          </div>
+
+          {/* Card inferior */}
           <div className="absolute bottom-4 left-4 right-4">
-            <div className="rounded-xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-md">
-              <p className="text-xs font-semibold text-white/80">Receta destacada</p>
-              <p className="text-sm font-bold text-white">Pasta al pesto con albahaca</p>
+            <div className="rounded-2xl border border-white/10 bg-stone-950/50 p-4 backdrop-blur-md">
+              <p className="text-base font-black leading-tight text-white">
+                Farfalle al pesto con tomates cherry
+              </p>
+              <p className="mt-1 text-xs leading-5 text-white/60">
+                Moñitos con pesto de albahaca, tomates cherry frescos y hojas verdes.
+              </p>
+              <div className="mt-3 flex items-center gap-4">
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/70">
+                  <Clock size={12} className="text-orange-400" />
+                  15 min
+                </span>
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/70">
+                  <Users size={12} className="text-orange-400" />
+                  2 porciones
+                </span>
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/70">
+                  <ChefIcon size={12} className="text-orange-400" />
+                  Fácil
+                </span>
+              </div>
             </div>
           </div>
         </div>
