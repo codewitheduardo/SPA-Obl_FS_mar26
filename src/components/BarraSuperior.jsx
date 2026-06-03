@@ -10,7 +10,6 @@ const obtenerFotosUsuario = (usuario = {}) =>
     .filter(Boolean)
     .filter((url, indice, lista) => lista.indexOf(url) === indice);
 
-
 export default function BarraSuperior() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,25 +67,22 @@ export default function BarraSuperior() {
   const esPremium = usuario?.plan === "premium";
   const fotosUsuario = obtenerFotosUsuario(usuario);
   const fotoUsuario = fotosUsuario[indiceFoto] || "";
+
   const estilosNotificacion = {
-    orange: "bg-orange-50 text-orange-700 ring-orange-100",
-    emerald: "bg-emerald-50 text-emerald-700 ring-emerald-100",
-    rose: "bg-rose-50 text-rose-700 ring-rose-100",
-    amber: "bg-amber-50 text-amber-700 ring-amber-100",
+    orange: "bg-orange-50 text-orange-600",
+    emerald: "bg-emerald-50 text-emerald-600",
+    rose: "bg-rose-50 text-rose-600",
+    amber: "bg-amber-50 text-amber-600",
   };
 
   useEffect(() => {
     const texto = busqueda.trim();
     const params = new URLSearchParams(location.search);
     const busquedaActual = params.get("buscar") || "";
-
     if (!texto) {
-      if (location.pathname === "/recetas" && busquedaActual) {
-        navigate("/recetas", { replace: true });
-      }
+      if (location.pathname === "/recetas" && busquedaActual) navigate("/recetas", { replace: true });
       return;
     }
-
     if (location.pathname !== "/recetas" || busquedaActual !== texto) {
       navigate(`/recetas?buscar=${encodeURIComponent(texto)}`, { replace: true });
     }
@@ -94,26 +90,21 @@ export default function BarraSuperior() {
 
   useEffect(() => {
     setNotificacionesAbiertas(false);
-
     if (location.pathname !== "/recetas") {
       setBusqueda("");
       return;
     }
-
     const textoUrl = new URLSearchParams(location.search).get("buscar") || "";
     setBusqueda(textoUrl);
   }, [location.pathname, location.search]);
 
-  useEffect(() => {
-    setIndiceFoto(0);
-  }, [usuario?.foto, usuario?.fotoUrl]);
+  useEffect(() => { setIndiceFoto(0); }, [usuario?.foto, usuario?.fotoUrl]);
 
   useEffect(() => {
     const cerrarSiClickAfuera = (evento) => {
       if (notificacionesAbiertas && !contenedorNotificacionesRef.current?.contains(evento.target)) setNotificacionesAbiertas(false);
       if (menuPerfilAbierto && !contenedorPerfilRef.current?.contains(evento.target)) setMenuPerfilAbierto(false);
     };
-
     document.addEventListener("mousedown", cerrarSiClickAfuera);
     return () => document.removeEventListener("mousedown", cerrarSiClickAfuera);
   }, [notificacionesAbiertas, menuPerfilAbierto]);
@@ -133,9 +124,7 @@ export default function BarraSuperior() {
   const alternarNotificaciones = () => {
     setNotificacionesAbiertas((valor) => {
       const nuevoValor = !valor;
-      if (nuevoValor) {
-        setFirmaLeida(firmaNotificaciones);
-      }
+      if (nuevoValor) setFirmaLeida(firmaNotificaciones);
       return nuevoValor;
     });
   };
@@ -146,15 +135,8 @@ export default function BarraSuperior() {
     navigate(ruta);
   };
 
-  const marcarLeidas = () => {
-    setFirmaLeida(firmaNotificaciones);
-  };
-
-  const irAlPerfil = () => {
-    setMenuPerfilAbierto(false);
-    navigate("/perfil");
-  };
-
+  const marcarLeidas = () => { setFirmaLeida(firmaNotificaciones); };
+  const irAlPerfil = () => { setMenuPerfilAbierto(false); navigate("/perfil"); };
   const salir = () => {
     setMenuPerfilAbierto(false);
     dispatch(cerrarSesion());
@@ -163,54 +145,97 @@ export default function BarraSuperior() {
   };
 
   return (
-    <header className="mb-6 grid gap-4 rounded-2xl border border-stone-200 bg-white px-4 py-4 shadow-sm sm:px-5 lg:grid-cols-[minmax(420px,1fr)_auto] lg:items-center">
-      <form onSubmit={buscar} className="flex min-h-12 w-full min-w-0 items-center gap-3 rounded-xl border border-stone-200 bg-stone-50 px-4 text-stone-500 transition focus-within:border-orange-300 focus-within:bg-white">
-        <Search size={20} className="shrink-0 text-stone-400" />
+    <header className="mb-6 flex items-center gap-3 rounded-2xl border border-stone-200 bg-white px-4 py-3 shadow-card sm:px-5">
+      {/* Search */}
+      <form
+        onSubmit={buscar}
+        className="flex flex-1 items-center gap-2.5 rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 transition-all duration-150 focus-within:border-orange-300 focus-within:bg-white focus-within:ring-2 focus-within:ring-orange-100"
+      >
+        <Search size={16} className="shrink-0 text-stone-400" />
         <input
-          className="min-w-0 flex-1 bg-transparent text-base font-semibold text-stone-800 outline-none placeholder:text-stone-400"
-          placeholder="Buscar recetas, categorias o ingredientes"
+          className="min-w-0 flex-1 bg-transparent text-sm font-medium text-stone-800 outline-none placeholder:text-stone-400"
+          placeholder="Buscar recetas, categorias o ingredientes..."
           value={busqueda}
           onChange={(evento) => setBusqueda(evento.target.value)}
         />
-        {busqueda && <button type="button" className="rounded-full p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-700" onClick={limpiarBusqueda} aria-label="Limpiar busqueda"><X size={18} /></button>}
+        {busqueda && (
+          <button
+            type="button"
+            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-stone-400 transition hover:bg-stone-200 hover:text-stone-700"
+            onClick={limpiarBusqueda}
+            aria-label="Limpiar busqueda"
+          >
+            <X size={13} />
+          </button>
+        )}
       </form>
 
-      <div className="flex min-w-0 items-center justify-between gap-3 sm:justify-end sm:gap-4">
+      <div className="flex items-center gap-2">
+        {/* Plan badge */}
+        <button
+          type="button"
+          className={`hidden items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition hover:-translate-y-px sm:flex ${
+            esPremium
+              ? "border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100"
+              : "border-lime-200 bg-lime-50 text-lime-700 hover:bg-lime-100"
+          }`}
+          onClick={() => navigate("/perfil")}
+          title="Ver plan"
+        >
+          <Sparkles size={13} />
+          <span className="capitalize">{usuario?.plan || "plus"}</span>
+        </button>
+
+        {/* Notifications */}
         <div className="relative" ref={contenedorNotificacionesRef}>
-          <button className="relative rounded-full border border-stone-200 bg-white p-3 text-stone-500 shadow-sm transition hover:bg-orange-50 hover:text-orange-700" aria-label="Notificaciones" onClick={alternarNotificaciones}>
-            <Bell size={18} />
-            {hayNovedades && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-orange-400" />}
+          <button
+            className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-500 transition hover:border-stone-300 hover:bg-stone-50 hover:text-stone-800"
+            aria-label="Notificaciones"
+            onClick={alternarNotificaciones}
+          >
+            <Bell size={16} />
+            {hayNovedades && (
+              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-orange-500 ring-2 ring-white" />
+            )}
           </button>
+
           {notificacionesAbiertas && (
-            <div className="absolute right-0 top-14 z-20 w-[min(26rem,88vw)] overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-lg">
-              <div className="flex items-start justify-between gap-3 border-b border-stone-100 p-4">
+            <div className="absolute right-0 top-12 z-20 w-[min(24rem,90vw)] overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-modal">
+              <div className="flex items-center justify-between gap-3 border-b border-stone-100 px-4 py-3">
                 <div>
-                  <p className="text-sm font-black text-stone-900">Notificaciones</p>
-                  <p className="mt-1 text-xs font-semibold text-stone-500">{hayNovedades ? "Tenes cambios recientes en tu recetario." : "Estas al dia con Cook Book."}</p>
+                  <p className="text-sm font-bold text-stone-900">Notificaciones</p>
+                  <p className="text-xs text-stone-400">
+                    {hayNovedades ? "Hay cambios recientes" : "Estas al dia"}
+                  </p>
                 </div>
-                <button type="button" className="inline-flex items-center gap-1 rounded-full bg-stone-50 px-3 py-1.5 text-xs font-black text-stone-600 transition hover:bg-orange-50 hover:text-orange-700" onClick={marcarLeidas}>
-                  <CheckCheck size={14} />
+                <button
+                  type="button"
+                  className="flex items-center gap-1 rounded-lg bg-stone-50 px-2.5 py-1.5 text-xs font-semibold text-stone-600 transition hover:bg-orange-50 hover:text-orange-700"
+                  onClick={marcarLeidas}
+                >
+                  <CheckCheck size={13} />
                   Leidas
                 </button>
               </div>
-              <div className="max-h-[22rem] space-y-2 overflow-y-auto p-3">
+              <div className="max-h-72 space-y-1 overflow-y-auto p-2">
                 {notificaciones.map(({ id, titulo, detalle, ruta, icono: Icono, tono }) => (
                   <button
                     key={id}
                     type="button"
-                    className="grid w-full grid-cols-[42px_1fr] gap-3 rounded-2xl border border-transparent p-3 text-left transition hover:border-orange-100 hover:bg-orange-50/50"
+                    className="flex w-full items-start gap-3 rounded-xl p-3 text-left transition hover:bg-stone-50"
                     onClick={() => abrirNotificacion(ruta)}
                   >
-                    <span className={`grid h-10 w-10 place-items-center rounded-2xl ring-1 ${estilosNotificacion[tono]}`}>
-                      <Icono size={18} />
+                    <span className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${estilosNotificacion[tono]}`}>
+                      <Icono size={15} />
                     </span>
-                    <span className="min-w-0">
-                      <span className="flex items-center justify-between gap-3">
-                        <span className="truncate text-sm font-black text-stone-900">{titulo}</span>
-                        {hayNovedades && <span className="h-2 w-2 shrink-0 rounded-full bg-orange-400" />}
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="truncate text-sm font-semibold text-stone-800">{titulo}</span>
+                        {hayNovedades && (
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange-500" />
+                        )}
                       </span>
-                      <span className="mt-1 block text-sm leading-5 text-stone-600">{detalle}</span>
-                      <span className="mt-2 block text-xs font-bold text-orange-700">Abrir seccion</span>
+                      <span className="mt-0.5 block text-xs leading-5 text-stone-500">{detalle}</span>
                     </span>
                   </button>
                 ))}
@@ -219,51 +244,49 @@ export default function BarraSuperior() {
           )}
         </div>
 
-        <button
-          type="button"
-          className={`hidden items-center gap-2 rounded-full border px-3 py-2 text-left shadow-sm transition hover:-translate-y-0.5 sm:inline-flex ${
-            esPremium
-              ? "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100"
-              : "border-lime-200 bg-lime-50 text-lime-800 hover:bg-lime-100"
-          }`}
-          onClick={() => navigate("/perfil")}
-          title="Ver plan"
-        >
-          <span className={`grid h-8 w-8 place-items-center rounded-full ${esPremium ? "bg-amber-200/70 text-amber-800" : "bg-lime-200/70 text-lime-800"}`}>
-            <Sparkles size={16} />
-          </span>
-          <span className="leading-tight">
-            <span className="block text-[10px] font-black uppercase tracking-wide opacity-70">Plan</span>
-            <span className="block text-sm font-black capitalize">{usuario?.plan || "plus"}</span>
-          </span>
-        </button>
+        {/* Profile */}
         <div className="relative" ref={contenedorPerfilRef}>
-          <button className="shrink-0 rounded-full ring-orange-100 transition hover:ring-4" onClick={() => setMenuPerfilAbierto((valor) => !valor)} aria-label="Abrir menu de perfil">
+          <button
+            className="shrink-0 rounded-xl ring-orange-200 transition hover:ring-2"
+            onClick={() => setMenuPerfilAbierto((valor) => !valor)}
+            aria-label="Abrir menu de perfil"
+          >
             {fotoUsuario ? (
               <img
                 src={fotoUsuario}
                 alt={usuario?.nombre}
                 referrerPolicy="no-referrer"
-                className="h-11 w-11 rounded-full object-cover"
+                className="h-9 w-9 rounded-xl object-cover"
                 onError={() => setIndiceFoto((actual) => actual + 1)}
               />
             ) : (
-              <span className="grid h-11 w-11 place-items-center rounded-full bg-orange-100 font-black text-orange-700">{usuario?.nombre?.[0] || "U"}</span>
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-orange-100 text-sm font-black text-orange-700">
+                {usuario?.nombre?.[0] || "U"}
+              </span>
             )}
           </button>
+
           {menuPerfilAbierto && (
-            <div className="absolute right-0 top-14 z-20 w-64 overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-lg">
-              <div className="border-b border-stone-100 p-4">
-                <p className="truncate font-black text-stone-900">{usuario?.nombre || "Usuario"}</p>
-                <p className="truncate text-sm font-semibold text-stone-500">{usuario?.email || "Sin email"}</p>
+            <div className="absolute right-0 top-12 z-20 w-56 overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-modal">
+              <div className="border-b border-stone-100 px-4 py-3">
+                <p className="truncate text-sm font-bold text-stone-900">{usuario?.nombre || "Usuario"}</p>
+                <p className="truncate text-xs text-stone-500">{usuario?.email || "Sin email"}</p>
               </div>
-              <div className="p-2">
-                <button type="button" className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm font-bold text-stone-700 transition hover:bg-orange-50 hover:text-orange-700" onClick={irAlPerfil}>
-                  <UserRound size={18} />
-                  Ir a mi perfil
+              <div className="p-1.5">
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-stone-700 transition hover:bg-stone-50 hover:text-stone-900"
+                  onClick={irAlPerfil}
+                >
+                  <UserRound size={15} className="text-stone-400" />
+                  Mi perfil
                 </button>
-                <button type="button" className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm font-bold text-rose-600 transition hover:bg-rose-50" onClick={salir}>
-                  <LogOut size={18} />
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+                  onClick={salir}
+                >
+                  <LogOut size={15} className="text-rose-400" />
                   Cerrar sesion
                 </button>
               </div>

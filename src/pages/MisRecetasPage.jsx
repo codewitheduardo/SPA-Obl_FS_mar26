@@ -43,12 +43,7 @@ const normalizarRecetaGuardada = (respuesta, datos, recetaAnterior = {}) => ({
 const completarUsuarioReceta = (receta, usuarioActual) => {
   const usuarioDesdeReceta = typeof receta.usuario === "object" ? receta.usuario : {};
   const usuarioDesdeUsuarioId = typeof receta.usuarioId === "object" ? receta.usuarioId : {};
-
-  return {
-    ...usuarioActual,
-    ...usuarioDesdeReceta,
-    ...usuarioDesdeUsuarioId,
-  };
+  return { ...usuarioActual, ...usuarioDesdeReceta, ...usuarioDesdeUsuarioId };
 };
 
 export default function MisRecetas() {
@@ -60,12 +55,12 @@ export default function MisRecetas() {
   const [recetaAEliminar, setRecetaAEliminar] = useState(null);
   const [eliminando, setEliminando] = useState(false);
   const esChef = usuario?.rol === "chef";
+
   const guardar = async (datos) => {
     if (!esChef && !modal?.receta) {
       toast.info("Tu rol lector no permite crear recetas");
       return;
     }
-
     try {
       if (modal?.receta) {
         const respuesta = await api.put(`/recetas/${modal.receta._id || modal.receta.id}`, crearFormDataReceta(datos));
@@ -81,9 +76,9 @@ export default function MisRecetas() {
       toast.error(error.message || "No se pudo guardar la receta");
     }
   };
+
   const confirmarEliminacion = async () => {
     if (!recetaAEliminar) return;
-
     try {
       setEliminando(true);
       const id = recetaAEliminar._id || recetaAEliminar.id;
@@ -97,15 +92,47 @@ export default function MisRecetas() {
       setEliminando(false);
     }
   };
+
   return (
     <div>
-      <EncabezadoPagina titulo="Mis recetas" descripcion={esChef ? "Listado de documentos del usuario con alta, edicion y eliminacion." : "Tu rol lector permite consultar recetas, pero no crear documentos propios."} accion={esChef && <Boton onClick={() => setModal({ tipo: "crear" })}><Plus size={18} /> Nueva receta</Boton>} />
-      {!esChef && <p className="mb-5 rounded-2xl border border-amber-100 bg-amber-50 p-4 font-semibold text-amber-700">Estas usando un perfil lector. Para crear recetas necesitarias ingresar con un usuario chef.</p>}
-      {misRecetas.length === 0 && <EstadoVacio titulo="Todavia no tenes recetas" texto={esChef ? "Crea tu primer documento principal desde el boton Nueva receta." : "Cuando tengas recetas asociadas a tu usuario, van a aparecer en esta seccion."} />}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {misRecetas.map((receta) => <TarjetaReceta key={receta._id || receta.id} receta={{ ...receta, usuario: completarUsuarioReceta(receta, usuario) }} categoria={categorias.find((c) => c.id === receta.categoriaId || c._id === receta.categoriaId || c._id === receta.categoriaId?._id)} usuarioActual={usuario} editable onEditar={(item) => setModal({ tipo: "editar", receta: item })} onEliminar={(item) => setRecetaAEliminar(item)} />)}
+      <EncabezadoPagina
+        titulo="Mis recetas"
+        descripcion={esChef ? "Listado de documentos del usuario con alta, edicion y eliminacion." : "Tu rol lector permite consultar recetas, pero no crear documentos propios."}
+        accion={esChef && (
+          <Boton onClick={() => setModal({ tipo: "crear" })}>
+            <Plus size={16} /> Nueva receta
+          </Boton>
+        )}
+      />
+
+      {!esChef && (
+        <p className="mb-5 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700">
+          Estás usando un perfil lector. Para crear recetas necesitarías ingresar con un usuario chef.
+        </p>
+      )}
+
+      {misRecetas.length === 0 && (
+        <EstadoVacio
+          titulo="Todavia no tenés recetas"
+          texto={esChef ? "Creá tu primer documento principal desde el botón Nueva receta." : "Cuando tengas recetas asociadas a tu usuario, van a aparecer en esta seccion."}
+        />
+      )}
+
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {misRecetas.map((receta) => (
+          <TarjetaReceta
+            key={receta._id || receta.id}
+            receta={{ ...receta, usuario: completarUsuarioReceta(receta, usuario) }}
+            categoria={categorias.find((c) => c.id === receta.categoriaId || c._id === receta.categoriaId || c._id === receta.categoriaId?._id)}
+            usuarioActual={usuario}
+            editable
+            onEditar={(item) => setModal({ tipo: "editar", receta: item })}
+            onEliminar={(item) => setRecetaAEliminar(item)}
+          />
+        ))}
       </div>
-      <Modal abierto={Boolean(modal)} titulo={modal?.receta ? "Editar receta" : "Crear receta"} alCerrar={() => setModal(null)}>
+
+      <Modal abierto={Boolean(modal)} titulo={modal?.receta ? "Editar receta" : "Nueva receta"} alCerrar={() => setModal(null)}>
         <FormularioReceta categorias={categorias} recetaInicial={modal?.receta} onSubmit={guardar} />
       </Modal>
       <Modal abierto={Boolean(recetaAEliminar)} titulo="Eliminar receta" alCerrar={() => setRecetaAEliminar(null)} tamano="compacto">
@@ -114,4 +141,3 @@ export default function MisRecetas() {
     </div>
   );
 }
-

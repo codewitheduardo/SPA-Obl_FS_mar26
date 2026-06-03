@@ -20,6 +20,7 @@ export default function DetalleReceta() {
   const recetaSeleccionada = useSelector((state) => state.recetas.recetaSeleccionada);
   const receta = recetaLocal || recetaSeleccionada;
   const categorias = useSelector((state) => state.categorias.items);
+
   useEffect(() => {
     const cargarDetalle = async () => {
       setCargando(true);
@@ -34,14 +35,35 @@ export default function DetalleReceta() {
     };
     cargarDetalle();
   }, [dispatch, id]);
-  if (cargando && !receta) return <p className="rounded-2xl bg-white p-4 font-bold text-stone-600">Cargando receta...</p>;
-  if (!receta) return <EstadoVacio titulo="Receta no encontrada" texto="No existe una receta interna con ese identificador." />;
+
+  if (cargando && !receta) {
+    return (
+      <div className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white px-5 py-4 text-sm font-medium text-stone-600 shadow-card">
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+        Cargando receta...
+      </div>
+    );
+  }
+
+  if (!receta) {
+    return <EstadoVacio titulo="Receta no encontrada" texto="No existe una receta interna con ese identificador." />;
+  }
+
   return (
     <div>
-      <EncabezadoDetalleReceta receta={receta} categoria={receta.categoriaId?.nombre ? receta.categoriaId : categorias.find((c) => c.id === idCategoriaReceta(receta) || c._id === idCategoriaReceta(receta))} />
-      <div className="grid items-start gap-6 xl:grid-cols-[22rem_1fr]"><IngredientesReceta ingredientes={receta.ingredientes} /><PasosReceta pasos={receta.pasos} /></div>
+      <EncabezadoDetalleReceta
+        receta={receta}
+        categoria={
+          receta.categoriaId?.nombre
+            ? receta.categoriaId
+            : categorias.find((c) => c.id === idCategoriaReceta(receta) || c._id === idCategoriaReceta(receta))
+        }
+      />
+      <div className="grid items-start gap-6 xl:grid-cols-[22rem_1fr]">
+        <IngredientesReceta ingredientes={receta.ingredientes} />
+        <PasosReceta pasos={receta.pasos} />
+      </div>
       <ComentariosReceta recetaId={receta.id || receta._id} />
     </div>
   );
 }
-

@@ -1,10 +1,9 @@
-import { Bot, BookOpen, ChefHat, FolderHeart, Heart, Home, LogOut, Menu, Sparkles, Tags, User } from "lucide-react";
+import { Bot, BookOpen, ChefHat, FolderHeart, Heart, Home, LogOut, Menu, Sparkles, Tags, User, X } from "lucide-react";
 import { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { cerrarSesion } from "../features/authSlice.js";
-import Boton from "./Boton.jsx";
 
 const enlaces = [
   { to: "/dashboard", texto: "Dashboard", icono: Home },
@@ -38,39 +37,93 @@ export default function BarraLateral() {
 
   return (
     <>
-      {abierta && <button className="fixed inset-0 z-20 bg-stone-950/30 md:hidden" onClick={() => setAbierta(false)} aria-label="Cerrar menu" />}
-      <button className="fixed left-4 top-4 z-40 rounded-xl border border-stone-200 bg-white p-3 shadow-sm md:hidden" onClick={() => setAbierta((valor) => !valor)} aria-label="Abrir menu">
-        <Menu size={20} />
+      {abierta && (
+        <button
+          className="fixed inset-0 z-20 bg-stone-950/40 backdrop-blur-sm md:hidden"
+          onClick={() => setAbierta(false)}
+          aria-label="Cerrar menu"
+        />
+      )}
+
+      <button
+        className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-xl border border-stone-200 bg-white shadow-card text-stone-700 transition hover:border-stone-300 hover:bg-stone-50 md:hidden"
+        onClick={() => setAbierta((v) => !v)}
+        aria-label="Abrir menu"
+      >
+        {abierta ? <X size={18} /> : <Menu size={18} />}
       </button>
-      <aside className={`fixed inset-y-0 left-0 z-30 flex w-[min(18rem,86vw)] flex-col overflow-y-auto border-r border-stone-200 bg-white px-5 py-6 shadow-sm transition-transform md:w-72 md:translate-x-0 ${abierta ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="mb-8 flex items-center gap-3">
-          <div className="grid h-12 w-12 place-items-center rounded-2xl bg-orange-50 text-orange-700 ring-1 ring-orange-100">
-            <FolderHeart size={24} />
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 flex w-[min(17rem,88vw)] flex-col border-r border-stone-200 bg-white transition-transform duration-200 md:w-64 md:translate-x-0 ${
+          abierta ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Logo */}
+        <div className="flex items-center gap-3 border-b border-stone-100 px-5 py-5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500 text-white shadow-sm">
+            <FolderHeart size={18} />
           </div>
-          <div>
-            <p className="text-xl font-black text-stone-900">Cook Book</p>
-            <p className="text-xs font-semibold text-stone-500">Recetas, planes y cocina</p>
+          <div className="min-w-0">
+            <p className="text-base font-black leading-none text-stone-900">Cook Book</p>
+            <p className="mt-0.5 truncate text-[11px] text-stone-400">Recetas & cocina</p>
           </div>
         </div>
-        <nav className="flex-1 space-y-1">
-          {enlaces.map(({ to, texto, icono: Icono }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={({ isActive }) => `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition ${isActive ? "bg-orange-50 text-orange-700" : "text-stone-600 hover:bg-stone-50 hover:text-stone-950"}`}
-              onClick={() => navegarDesdeMenu(to)}
-            >
-              <Icono size={18} />
-              {texto}
-            </NavLink>
-          ))}
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto px-3 py-4">
+          <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-widest text-stone-400">
+            Navegacion
+          </p>
+          <div className="space-y-0.5">
+            {enlaces.map(({ to, texto, icono: Icono }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all duration-150 ${
+                    isActive
+                      ? "bg-orange-50 text-orange-700"
+                      : "text-stone-600 hover:bg-stone-50 hover:text-stone-900"
+                  }`
+                }
+                onClick={() => navegarDesdeMenu(to)}
+              >
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-all ${
+                        isActive
+                          ? "bg-orange-100 text-orange-700"
+                          : "text-stone-400 group-hover:text-stone-600"
+                      }`}
+                    >
+                      <Icono size={15} />
+                    </span>
+                    {texto}
+                    {isActive && (
+                      <span className="ml-auto h-1.5 w-1.5 rounded-full bg-orange-500" />
+                    )}
+                  </>
+                )}
+              </NavLink>
+            ))}
+          </div>
         </nav>
-        <Boton variante="outline" className="mt-8 w-full shrink-0" onClick={salir}>
-          <LogOut size={18} />
-          Logout
-        </Boton>
+
+        {/* Logout */}
+        <div className="border-t border-stone-100 p-3">
+          <button
+            type="button"
+            onClick={salir}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-stone-500 transition hover:bg-rose-50 hover:text-rose-700"
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg text-stone-400">
+              <LogOut size={15} />
+            </span>
+            Cerrar sesion
+          </button>
+        </div>
       </aside>
     </>
   );
 }
-

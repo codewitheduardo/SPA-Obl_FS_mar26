@@ -18,63 +18,85 @@ export default function EncabezadoDetalleReceta({ receta, categoria }) {
     }
   };
 
-  return (
-    <section className="mb-8 grid overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm lg:grid-cols-[minmax(16rem,23rem)_1fr]">
-      <div className="relative min-h-64 bg-orange-50 lg:min-h-full">
-        {imagen ? (
-          <img src={imagen} alt={receta.titulo} className="absolute inset-0 h-full w-full object-cover" />
-        ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-orange-50 to-amber-50 text-base font-bold text-orange-700">
-            <Utensils size={36} />
-            Sin imagen cargada
-          </div>
-        )}
-      </div>
+  const stats = [
+    { icon: Clock, label: "Tiempo", value: `${receta.tiempoPreparacion || "-"} min` },
+    { icon: Users, label: "Porciones", value: `${receta.porciones || "-"} porc.` },
+    { icon: User, label: "Autor", value: autor },
+  ];
 
-      <div className="p-5 sm:p-6">
-        <div className="flex flex-col justify-between gap-4 xl:flex-row xl:items-start">
-          <div className="min-w-0">
-            <div className="mb-3 flex flex-wrap gap-2">
-              <Insignia className={obtenerEstilosDificultad(receta.dificultad)}>{formatearDificultad(receta.dificultad)}</Insignia>
-              <Insignia className="max-w-[14rem] truncate bg-stone-100 text-stone-700" title={nombreCategoria}>{nombreCategoria}</Insignia>
-              <Insignia className="bg-orange-100 text-orange-700">Cook Book</Insignia>
+  return (
+    <section className="mb-8 overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-card">
+      <div className="grid lg:grid-cols-[minmax(18rem,22rem)_1fr]">
+        {/* Imagen */}
+        <div className="relative min-h-60 bg-stone-100 lg:min-h-full">
+          {imagen ? (
+            <img
+              src={imagen}
+              alt={receta.titulo}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-orange-50 to-amber-50 text-orange-300">
+              <Utensils size={40} />
+              <span className="text-sm font-semibold text-orange-400">Sin imagen</span>
             </div>
-            <h1 className="max-w-4xl text-3xl font-black leading-tight text-stone-900 sm:text-[2.35rem]">{receta.titulo}</h1>
-            <p className="mt-2 max-w-3xl text-base leading-7 text-stone-600">{receta.descripcion || "Esta receta todavia no tiene descripcion cargada."}</p>
-          </div>
-          <div className="flex shrink-0 flex-wrap gap-2">
-            <a href="#comentarios">
-              <Boton variante="outline" type="button" className="px-4"><MessageCircle size={16} /> Comentar</Boton>
-            </a>
-            <Boton variante="outline" type="button" className="px-4" onClick={compartir}><Share2 size={16} /> Compartir</Boton>
-          </div>
+          )}
+          {imagen && (
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/40 via-transparent to-transparent lg:bg-gradient-to-r" />
+          )}
         </div>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <article className="flex items-center gap-3 rounded-2xl border border-stone-100 bg-stone-50 p-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-orange-600 ring-1 ring-orange-100"><Clock size={18} /></span>
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wide text-stone-500">Tiempo</p>
-              <p className="truncate text-base font-black text-stone-900">{receta.tiempoPreparacion || "-"} min</p>
-            </div>
-          </article>
-          <article className="flex items-center gap-3 rounded-2xl border border-stone-100 bg-stone-50 p-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-orange-600 ring-1 ring-orange-100"><Users size={18} /></span>
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wide text-stone-500">Porciones</p>
-              <p className="truncate text-base font-black text-stone-900">{receta.porciones || "-"} porciones</p>
-            </div>
-          </article>
-          <article className="flex items-center gap-3 rounded-2xl border border-stone-100 bg-stone-50 p-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-orange-600 ring-1 ring-orange-100"><User size={18} /></span>
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wide text-stone-500">Autor</p>
-              <p className="truncate text-base font-black text-stone-900">{autor}</p>
-            </div>
-          </article>
+        {/* Info */}
+        <div className="p-6 sm:p-8">
+          {/* Badges */}
+          <div className="mb-4 flex flex-wrap gap-2">
+            <Insignia className={obtenerEstilosDificultad(receta.dificultad)}>
+              {formatearDificultad(receta.dificultad)}
+            </Insignia>
+            <Insignia className="bg-stone-100 text-stone-600" title={nombreCategoria}>
+              {nombreCategoria}
+            </Insignia>
+            <Insignia className="bg-orange-50 text-orange-700 ring-1 ring-orange-100">
+              Cook Book
+            </Insignia>
+          </div>
+
+          {/* Título */}
+          <h1 className="text-3xl font-black leading-tight tracking-tight text-stone-900 sm:text-4xl">
+            {receta.titulo}
+          </h1>
+          <p className="mt-3 text-base leading-7 text-stone-500">
+            {receta.descripcion || "Esta receta todavia no tiene descripcion cargada."}
+          </p>
+
+          {/* Acciones */}
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            <a href="#comentarios">
+              <Boton variante="outline" type="button" className="px-5">
+                <MessageCircle size={15} /> Comentar
+              </Boton>
+            </a>
+            <Boton variante="outline" type="button" className="px-5" onClick={compartir}>
+              <Share2 size={15} /> Compartir
+            </Boton>
+          </div>
+
+          {/* Stats */}
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {stats.map(({ icon: Icon, label, value }) => (
+              <div key={label} className="flex items-center gap-3 rounded-xl border border-stone-100 bg-stone-50 p-3.5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-orange-500 shadow-card ring-1 ring-stone-100">
+                  <Icon size={17} />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-stone-400">{label}</p>
+                  <p className="truncate text-sm font-black text-stone-900">{value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
-

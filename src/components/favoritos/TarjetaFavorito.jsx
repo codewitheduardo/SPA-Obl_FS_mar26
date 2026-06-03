@@ -2,7 +2,6 @@ import { ExternalLink, Globe2, Trash2, Utensils } from "lucide-react";
 import { Link } from "react-router-dom";
 import Boton from "../Boton.jsx";
 import Insignia from "../Insignia.jsx";
-import Tarjeta from "../Tarjeta.jsx";
 
 export default function TarjetaFavorito({ favorito, onEliminar }) {
   const nombre = favorito.nombre || "Receta favorita";
@@ -10,41 +9,58 @@ export default function TarjetaFavorito({ favorito, onEliminar }) {
   const area = favorito.area || "Internacional";
 
   return (
-    <Tarjeta className="group flex h-full flex-col overflow-hidden p-0 hover:-translate-y-1 hover:border-orange-200">
-      <div className="relative overflow-hidden rounded-t-2xl bg-sky-50">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:border-orange-200 hover:shadow-card-hover">
+      {/* Imagen */}
+      <div className="relative overflow-hidden">
         {favorito.imagenUrl ? (
-          <img src={favorito.imagenUrl} alt={nombre} className="h-48 w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
+          <img
+            src={favorito.imagenUrl}
+            alt={nombre}
+            className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          />
         ) : (
-          <div className="flex h-48 w-full flex-col items-center justify-center gap-3 text-sm font-bold text-sky-700">
+          <div className="flex h-44 w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-sky-50 to-indigo-50 text-sky-300">
             <Utensils size={28} />
-            Sin imagen externa
+            <span className="text-xs font-semibold text-sky-400">Sin imagen</span>
           </div>
         )}
-        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/30 via-transparent to-transparent" />
+        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           <Insignia className="bg-orange-100/95 text-orange-700">Favorito</Insignia>
           <Insignia className="bg-sky-100/95 text-sky-700">TheMealDB</Insignia>
         </div>
-        <span className="absolute bottom-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-black text-stone-700 shadow-sm">{area}</span>
+        <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-bold text-stone-700 shadow-sm backdrop-blur-sm">
+          {area}
+        </span>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="line-clamp-2 text-xl font-black leading-tight text-stone-900">{nombre}</h3>
-        <p className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-stone-500">
-          <Globe2 size={16} />
-          <span>{area}</span>
+      {/* Contenido */}
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="line-clamp-2 text-[1.05rem] font-black leading-snug text-stone-900">
+          {nombre}
+        </h3>
+        <p className="mt-2 flex items-center gap-1.5 text-sm text-stone-500">
+          <Globe2 size={13} className="shrink-0" />
+          <span className="font-medium">{area}</span>
           <span className="text-stone-300">/</span>
-          <span>{categoria}</span>
+          <span className="truncate">{categoria}</span>
         </p>
 
-        <div className="mt-auto grid grid-cols-2 gap-2 pt-5">
-          <Link to={`/recetas-externas/${favorito.mealDbId}`}>
-            <Boton variante="outline" className="w-full px-4"><ExternalLink size={16} /> Ver</Boton>
+        <div className="mt-auto grid grid-cols-2 gap-2 pt-4">
+          <Link to={`/recetas-externas/${favorito.mealDbId}`} className="block">
+            <Boton variante="outline" className="w-full px-3">
+              <ExternalLink size={14} /> Ver
+            </Boton>
           </Link>
-          <Boton variante="outline" className="w-full border-rose-100 px-4 text-rose-600 hover:bg-rose-50" onClick={() => onEliminar(favorito)}>
-            <Trash2 size={16} /> Quitar
-          </Boton>
+          <button
+            type="button"
+            className="flex items-center justify-center gap-2 rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 hover:text-rose-700"
+            onClick={() => onEliminar(favorito)}
+          >
+            <Trash2 size={14} /> Quitar
+          </button>
         </div>
       </div>
-    </Tarjeta>
+    </article>
   );
 }

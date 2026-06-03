@@ -38,7 +38,6 @@ const completarUsuarioAutor = ({ receta, recetaPropia, usuarioActual, usuarios }
       ...(autorBase || {}),
     };
   }
-
   return null;
 };
 
@@ -50,6 +49,7 @@ export default function Recetas() {
   const usuario = useSelector((state) => state.auth.usuario);
   const [usuarios, setUsuarios] = useState([]);
   const busquedaGeneral = searchParams.get("buscar")?.toLowerCase() || "";
+
   useEffect(() => {
     const cargarRecetas = async () => {
       try {
@@ -62,6 +62,7 @@ export default function Recetas() {
     };
     cargarRecetas();
   }, [dispatch]);
+
   useEffect(() => {
     const cargarUsuarios = async () => {
       try {
@@ -72,9 +73,9 @@ export default function Recetas() {
         setUsuarios([]);
       }
     };
-
     cargarUsuarios();
   }, []);
+
   const recetasFiltradas = items.filter((receta) =>
     (!busquedaGeneral ||
       receta.titulo.toLowerCase().includes(busquedaGeneral) ||
@@ -86,45 +87,83 @@ export default function Recetas() {
     (!filtros.tiempoMaximo || Number(receta.tiempoPreparacion) <= Number(filtros.tiempoMaximo)) &&
     (!filtros.ingrediente || textoIngredientes(receta.ingredientes).toLowerCase().includes(filtros.ingrediente.toLowerCase())),
   );
+
   const tiempoPromedio = items.length
     ? Math.round(items.reduce((total, receta) => total + Number(receta.tiempoPreparacion || 0), 0) / items.length)
     : 0;
+
   const metricas = [
-    { titulo: "Recetas publicadas", valor: items.length, icono: BookOpen },
-    { titulo: "Resultados visibles", valor: recetasFiltradas.length, icono: ChefHat },
-    { titulo: "Categorias", valor: categorias.length, icono: Tags },
-    { titulo: "Tiempo promedio", valor: tiempoPromedio ? `${tiempoPromedio} min` : "-", icono: Clock },
+    { titulo: "Publicadas", valor: items.length, icono: BookOpen, color: "orange" },
+    { titulo: "Visibles", valor: recetasFiltradas.length, icono: ChefHat, color: "emerald" },
+    { titulo: "Categorias", valor: categorias.length, icono: Tags, color: "amber" },
+    { titulo: "Tiempo prom.", valor: tiempoPromedio ? `${tiempoPromedio} min` : "-", icono: Clock, color: "rose" },
   ];
+
+  const colores = {
+    orange: "bg-orange-50 text-orange-500",
+    emerald: "bg-emerald-50 text-emerald-500",
+    amber: "bg-amber-50 text-amber-500",
+    rose: "bg-rose-50 text-rose-500",
+  };
 
   return (
     <div>
-      <EncabezadoPagina titulo="Recetas internas de la comunidad" descripcion="Documentos propios de Cook Book, con detalle, comentarios y valoraciones." />
-      <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {metricas.map(({ titulo, valor, icono: Icono }) => (
-          <article key={titulo} className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
-            <div className="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-orange-50 text-orange-700">
-              <Icono size={20} />
+      <EncabezadoPagina
+        titulo="Recetas de la comunidad"
+        descripcion="Recetas internas de Cook Book con detalle, comentarios y valoraciones."
+      />
+
+      {/* Stats */}
+      <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {metricas.map(({ titulo, valor, icono: Icono, color }) => (
+          <article key={titulo} className="rounded-2xl border border-stone-200 bg-white p-4 shadow-card">
+            <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl ${colores[color]}`}>
+              <Icono size={18} />
             </div>
-            <p className="text-sm font-semibold text-stone-500">{titulo}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">{titulo}</p>
             <p className="mt-1 text-2xl font-black text-stone-900">{valor}</p>
           </article>
         ))}
-      </section>
-      {busquedaGeneral && <p className="mb-4 rounded-2xl border border-orange-100 bg-orange-50 p-4 text-sm font-semibold text-orange-700">Resultados para: {searchParams.get("buscar")}</p>}
+      </div>
+
+      {/* Búsqueda activa */}
+      {busquedaGeneral && (
+        <p className="mb-4 rounded-xl border border-orange-100 bg-orange-50 px-4 py-3 text-sm font-medium text-orange-700">
+          Resultados para: <span className="font-bold">"{searchParams.get("buscar")}"</span>
+        </p>
+      )}
+
       <FiltrosRecetas filtros={filtros} categorias={categorias} onChange={(datos) => dispatch(actualizarFiltrosRecetas(datos))} />
-      {cargando && <p className="mb-4 rounded-2xl bg-white p-4 font-bold text-stone-600">Cargando recetas...</p>}
+
+      {cargando && (
+        <div className="mb-4 flex items-center gap-3 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-600">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-stone-300 border-t-orange-500" />
+          Cargando recetas...
+        </div>
+      )}
+
       <MensajeError mensaje={error} />
-      {!cargando && recetasFiltradas.length === 0 && <EstadoVacio titulo="No hay recetas para mostrar" texto="Cuando la API devuelva recetas internas, van a aparecer en esta seccion." />}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+      {!cargando && recetasFiltradas.length === 0 && (
+        <EstadoVacio titulo="No hay recetas para mostrar" texto="Cuando la API devuelva recetas internas, van a aparecer en esta seccion." />
+      )}
+
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {recetasFiltradas.map((receta) => {
           const recetaId = receta._id || receta.id;
           const recetaPropia = misRecetas.find((item) => (item._id || item.id) === recetaId);
           const usuarioReceta = completarUsuarioAutor({ receta, recetaPropia, usuarioActual: usuario, usuarios });
-
-          return <TarjetaReceta key={recetaId} receta={{ ...receta, usuario: usuarioReceta }} categoria={receta.categoriaId?.nombre ? receta.categoriaId : categorias.find((c) => c.id === idCategoriaReceta(receta) || c._id === idCategoriaReceta(receta))} usuarioActual={usuario} compacto />;
+          return (
+            <TarjetaReceta
+              key={recetaId}
+              receta={{ ...receta, usuario: usuarioReceta }}
+              categoria={receta.categoriaId?.nombre ? receta.categoriaId : categorias.find((c) => c.id === idCategoriaReceta(receta) || c._id === idCategoriaReceta(receta))}
+              usuarioActual={usuario}
+              compacto
+            />
+          );
         })}
       </div>
     </div>
   );
 }
-

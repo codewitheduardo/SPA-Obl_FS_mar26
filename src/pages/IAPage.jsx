@@ -31,7 +31,6 @@ const armarResultadoIA = (respuestaIA, prompt) => {
     ? respuestaIA
     : respuestaIA?.texto || respuestaIA?.respuesta || respuestaIA?.message || respuestaIA?.resultado || respuestaIA?.contenido || respuestaIA?.descripcion || "";
   const contenido = limpiarTextoIA(textoRespuesta);
-
   if (!contenido || contenido.toLowerCase().includes("no se pudo generar")) return null;
 
   return {
@@ -134,7 +133,6 @@ export default function IA() {
       toast.info("Tu rol lector no permite guardar recetas nuevas");
       return;
     }
-
     if (!resultado) return;
     if (!categorias[0]?.id && !categorias[0]?._id) {
       toast.error("Necesitas tener una categoria cargada para guardar la receta");
@@ -164,11 +162,27 @@ export default function IA() {
 
   return (
     <div>
-      <EncabezadoPagina titulo="Crea una receta con lo que tenes" descripcion={usuario?.rol === "chef" ? "Genera una idea de cocina y guardala como borrador para terminarla desde Mis recetas." : "Como lector podes generar ideas, pero guardar recetas queda reservado para usuarios chef."} />
-      {usuario?.rol !== "chef" && <p className="mb-5 rounded-2xl border border-amber-100 bg-amber-50 p-4 font-semibold text-amber-700">Modo lector: podes probar la IA y leer el resultado, pero no guardar una nueva receta.</p>}
+      <EncabezadoPagina
+        titulo="Creá una receta con lo que tenés"
+        descripcion={usuario?.rol === "chef"
+          ? "Generá una idea de cocina y guardala como borrador para terminarla desde Mis recetas."
+          : "Como lector podés generar ideas, pero guardar recetas queda reservado para usuarios chef."}
+      />
+
+      {usuario?.rol !== "chef" && (
+        <p className="mb-5 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700">
+          Modo lector: podés probar la IA y leer el resultado, pero no guardar una nueva receta.
+        </p>
+      )}
+
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
         <FormularioIA onGenerar={generarRecetaConIA} cargando={cargando} />
-        <ResultadoIA resultado={resultado} onUsar={guardarResultadoComoBorrador} onRegenerar={() => ultimoFormulario && generarRecetaConIA(ultimoFormulario)} puedeGuardar={usuario?.rol === "chef"} />
+        <ResultadoIA
+          resultado={resultado}
+          onUsar={guardarResultadoComoBorrador}
+          onRegenerar={() => ultimoFormulario && generarRecetaConIA(ultimoFormulario)}
+          puedeGuardar={usuario?.rol === "chef"}
+        />
       </div>
     </div>
   );

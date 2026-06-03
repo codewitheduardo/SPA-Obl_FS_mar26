@@ -1,4 +1,4 @@
-import { ImageUp } from "lucide-react";
+import { ImageUp, Upload } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import api from "../api/api.js";
@@ -11,7 +11,6 @@ export default function CajaSubidaImagen({ onChange, onUpload, previewInicial, f
     const formData = new FormData();
     formData.append("imagen", archivo);
     formData.append("folder", folder);
-
     const respuesta = await api.post("/uploads", formData);
     return respuesta.data?.data || respuesta.data;
   };
@@ -36,13 +35,33 @@ export default function CajaSubidaImagen({ onChange, onUpload, previewInicial, f
   };
 
   return (
-    <label className="block cursor-pointer rounded-2xl border border-dashed border-orange-200 bg-orange-50 p-5 text-center transition hover:bg-orange-50">
-      <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(evento) => manejarArchivo(evento.target.files?.[0])} />
-      {preview ? <img src={preview} alt="Vista previa" className="mx-auto mb-4 h-40 w-full rounded-2xl object-cover" /> : <ImageUp className="mx-auto mb-3 text-orange-500" size={34} />}
-      <span className="block font-bold text-stone-800">Arrastra una imagen o selecciona un archivo</span>
-      <span className="mt-1 block text-sm text-stone-500">JPG, PNG o WEBP</span>
-      <span className="mt-2 block text-xs text-stone-400">{subiendo ? "Subiendo imagen..." : "Preparado para POST /uploads"}</span>
+    <label className="group block cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-stone-200 bg-stone-50 text-center transition-all hover:border-orange-300 hover:bg-orange-50/40">
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="hidden"
+        onChange={(evento) => manejarArchivo(evento.target.files?.[0])}
+      />
+      {preview ? (
+        <div className="relative">
+          <img src={preview} alt="Vista previa" className="h-44 w-full object-cover" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-stone-950/40 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+            <Upload size={20} className="text-white" />
+            <span className="text-xs font-bold text-white">Cambiar imagen</span>
+          </div>
+        </div>
+      ) : (
+        <div className="px-5 py-8">
+          <ImageUp size={32} className="mx-auto mb-3 text-stone-400 transition-colors group-hover:text-orange-500" />
+          <p className="font-semibold text-stone-700">Arrastrá o seleccioná una imagen</p>
+          <p className="mt-1 text-sm text-stone-400">JPG, PNG o WEBP</p>
+        </div>
+      )}
+      <div className="border-t border-stone-100 px-4 py-2">
+        <span className="text-xs text-stone-400">
+          {subiendo ? "Subiendo imagen..." : preview ? "Clic para cambiar" : "Máx. recomendado: 5MB"}
+        </span>
+      </div>
     </label>
   );
 }
-

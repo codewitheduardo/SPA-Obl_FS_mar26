@@ -18,7 +18,6 @@ const crearFormDataReceta = (datos) => {
   const formData = new FormData();
   const ingredientesReceta = Array.isArray(datos.ingredientes) ? datos.ingredientes : String(datos.ingredientes || "").split(",").map((ingrediente) => ingrediente.trim()).filter(Boolean);
   const pasosReceta = Array.isArray(datos.pasos) ? datos.pasos : String(datos.pasos || "").split(".").map((paso) => paso.trim()).filter(Boolean);
-
   formData.append("titulo", datos.titulo);
   formData.append("descripcion", datos.descripcion);
   ingredientesReceta.forEach((ingrediente) => formData.append("ingredientes", ingrediente));
@@ -29,7 +28,6 @@ const crearFormDataReceta = (datos) => {
   formData.append("categoriaId", datos.categoriaId);
   formData.append("estado", datos.estado || "publicada");
   if (datos.imagen instanceof File) formData.append("imagen", datos.imagen);
-
   return formData;
 };
 
@@ -64,7 +62,6 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
 
   const eliminar = async () => {
     if (!recetaAEliminar) return;
-
     try {
       setEliminando(true);
       const id = recetaAEliminar._id || recetaAEliminar.id;
@@ -84,7 +81,6 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
       toast.info("Tu rol lector no permite crear recetas");
       return;
     }
-
     try {
       if (modal?.receta) {
         const id = modal.receta._id || modal.receta.id;
@@ -103,51 +99,123 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
   };
 
   return (
-    <section className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm sm:rounded-2xl sm:p-5">
-      <div className="mb-5 flex flex-col justify-between gap-3 border-b border-stone-100 pb-4 sm:flex-row sm:items-center">
+    <section className="rounded-2xl border border-stone-200 bg-white shadow-card">
+      {/* Header */}
+      <div className="flex flex-col justify-between gap-4 border-b border-stone-100 px-5 py-5 sm:flex-row sm:items-center">
         <div>
-          <p className="text-xs font-black uppercase tracking-wider text-orange-600">Documento principal</p>
-          <h3 className="mt-1 text-xl font-black text-stone-900">Gestion rapida de mis recetas</h3>
-          <p className="mt-1 text-sm text-stone-500">{esChef ? "Alta, filtros, edicion y eliminacion desde una unica interfaz." : "Consulta tus recetas y filtra resultados. El alta esta reservada para usuarios chef."}</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-orange-600">Documento principal</p>
+          <h3 className="mt-1 text-xl font-black text-stone-900">Gestión de mis recetas</h3>
+          <p className="mt-0.5 text-sm text-stone-500">
+            {esChef
+              ? "Alta, filtros, edicion y eliminacion desde una unica interfaz."
+              : "Consulta tus recetas y filtra resultados. El alta esta reservada para chefs."}
+          </p>
         </div>
         {esChef ? (
-          <Boton className="w-full sm:w-auto" onClick={() => setModal({ tipo: "crear" })}><Plus size={18} /> Alta receta</Boton>
+          <Boton className="w-full sm:w-auto" onClick={() => setModal({ tipo: "crear" })}>
+            <Plus size={16} /> Nueva receta
+          </Boton>
         ) : (
-          <span className="rounded-full bg-amber-50 px-4 py-2 text-sm font-black text-amber-700 ring-1 ring-amber-100">Modo lector</span>
+          <span className="inline-flex items-center rounded-full bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700 ring-1 ring-amber-100">
+            Modo lector
+          </span>
         )}
       </div>
-      <div className="mb-4 grid gap-3 rounded-2xl border border-stone-100 bg-stone-50 p-3 lg:grid-cols-3">
-        <CampoTexto label="Filtrar por titulo" value={filtros.titulo} onChange={(e) => setFiltros((actuales) => ({ ...actuales, titulo: e.target.value }))} />
-        <Selector label="Filtrar por categoria" value={filtros.categoriaId} onChange={(e) => setFiltros((actuales) => ({ ...actuales, categoriaId: e.target.value }))}>
-          <option value="">Todas</option>
-          {categorias.map((categoria) => <option key={categoria._id || categoria.id} value={categoria._id || categoria.id}>{categoria.nombre}</option>)}
+
+      {/* Filtros */}
+      <div className="grid gap-3 bg-stone-50/60 px-5 py-4 sm:grid-cols-3">
+        <CampoTexto
+          label="Buscar por titulo"
+          value={filtros.titulo}
+          onChange={(e) => setFiltros((actuales) => ({ ...actuales, titulo: e.target.value }))}
+          placeholder="Escribí un título..."
+        />
+        <Selector
+          label="Categoria"
+          value={filtros.categoriaId}
+          onChange={(e) => setFiltros((actuales) => ({ ...actuales, categoriaId: e.target.value }))}
+        >
+          <option value="">Todas las categorias</option>
+          {categorias.map((categoria) => (
+            <option key={categoria._id || categoria.id} value={categoria._id || categoria.id}>
+              {categoria.nombre}
+            </option>
+          ))}
         </Selector>
-        <Selector label="Filtrar por dificultad" value={filtros.dificultad} onChange={(e) => setFiltros((actuales) => ({ ...actuales, dificultad: e.target.value }))}>
+        <Selector
+          label="Dificultad"
+          value={filtros.dificultad}
+          onChange={(e) => setFiltros((actuales) => ({ ...actuales, dificultad: e.target.value }))}
+        >
           <option value="">Todas</option>
           <option value="facil">Facil</option>
           <option value="media">Media</option>
           <option value="dificil">Dificil</option>
         </Selector>
       </div>
-      <div className="overflow-x-auto rounded-2xl border border-stone-100">
-        <table className="w-full min-w-[860px] text-left text-sm">
-          <thead className="bg-stone-50 text-xs font-black uppercase tracking-wide text-stone-500"><tr><th className="px-4 py-3">Titulo</th><th className="px-4 py-3">Estado</th><th className="px-4 py-3">Categoria</th><th className="px-4 py-3">Dificultad</th><th className="px-4 py-3">Tiempo</th><th className="px-4 py-3">Acciones</th></tr></thead>
-          <tbody>
+
+      {/* Tabla */}
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[800px] text-left text-sm">
+          <thead>
+            <tr className="border-b border-stone-100 bg-stone-50">
+              <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-stone-400">Titulo</th>
+              <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-stone-400">Estado</th>
+              <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-stone-400">Categoria</th>
+              <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-stone-400">Dificultad</th>
+              <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-stone-400">Tiempo</th>
+              <th className="px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-stone-400">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-stone-100">
             {recetasFiltradas.map((receta) => {
               const categoriaId = receta.categoriaId?._id || receta.categoriaId;
               const categoria = categorias.find((item) => item.id === categoriaId || item._id === categoriaId);
+              const borrador = esRecetaBorrador(receta);
               return (
-                <tr key={receta._id || receta.id} className="border-t border-stone-100 transition hover:bg-orange-50/40">
-                  <td className="px-4 py-3 font-bold text-stone-900">{receta.titulo}</td>
-                  <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs font-black ${esRecetaBorrador(receta) ? "bg-stone-100 text-stone-700" : "bg-emerald-50 text-emerald-700"}`}>{esRecetaBorrador(receta) ? "Borrador" : "Publicada"}</span></td>
-                  <td className="px-4 py-3 text-stone-600">{receta.categoriaId?.nombre || categoria?.nombre || "Sin categoria"}</td>
-                  <td className="px-4 py-3 capitalize text-stone-600">{receta.dificultad}</td>
-                  <td className="px-4 py-3 text-stone-600">{receta.tiempoPreparacion} min</td>
-                  <td className="px-4 py-3">
-                    <div className="flex flex-wrap gap-2">
-                      {esChef && <Boton variante="secundario" className="px-3 py-2" onClick={() => setModal({ tipo: "editar", receta })}><Edit size={14} /> Editar</Boton>}
-                      <Link to={`/recetas/${receta._id || receta.id}`}><Boton variante="outline" className="px-3 py-2"><Eye size={14} /> Ver</Boton></Link>
-                      {esChef && <Boton variante="peligro" className="px-3 py-2" onClick={() => setRecetaAEliminar(receta)}><Trash2 size={14} /> Eliminar</Boton>}
+                <tr key={receta._id || receta.id} className="transition-colors hover:bg-orange-50/30">
+                  <td className="px-5 py-3.5 font-semibold text-stone-900">{receta.titulo}</td>
+                  <td className="px-5 py-3.5">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold ${borrador ? "bg-stone-100 text-stone-600" : "bg-emerald-50 text-emerald-700"}`}>
+                      {borrador ? "Borrador" : "Publicada"}
+                    </span>
+                  </td>
+                  <td className="px-5 py-3.5 text-stone-500">
+                    {receta.categoriaId?.nombre || categoria?.nombre || "Sin categoria"}
+                  </td>
+                  <td className="px-5 py-3.5 capitalize text-stone-500">{receta.dificultad}</td>
+                  <td className="px-5 py-3.5 text-stone-500">{receta.tiempoPreparacion} min</td>
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-2">
+                      {esChef && (
+                        <button
+                          type="button"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-stone-200 bg-white text-stone-500 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
+                          onClick={() => setModal({ tipo: "editar", receta })}
+                          title="Editar"
+                        >
+                          <Edit size={14} />
+                        </button>
+                      )}
+                      <Link to={`/recetas/${receta._id || receta.id}`}>
+                        <button
+                          type="button"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-stone-200 bg-white text-stone-500 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700"
+                          title="Ver"
+                        >
+                          <Eye size={14} />
+                        </button>
+                      </Link>
+                      {esChef && (
+                        <button
+                          type="button"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100 hover:text-rose-700"
+                          onClick={() => setRecetaAEliminar(receta)}
+                          title="Eliminar"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -156,9 +224,23 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
           </tbody>
         </table>
       </div>
-      {misRecetas.length === 0 && <div className="mt-4"><EstadoVacio titulo="Sin recetas propias" texto={esChef ? "Crea una receta desde Alta receta para que aparezca en este dashboard." : "No hay recetas asociadas a tu usuario para mostrar."} /></div>}
-      {misRecetas.length > 0 && recetasFiltradas.length === 0 && <div className="mt-4"><EstadoVacio titulo="Sin resultados" texto="No hay recetas propias que coincidan con los filtros elegidos." /></div>}
-      <Modal abierto={Boolean(modal)} titulo={modal?.receta ? "Editar receta" : "Alta de receta"} alCerrar={() => setModal(null)}>
+
+      {/* Estados vacíos */}
+      {misRecetas.length === 0 && (
+        <div className="p-5">
+          <EstadoVacio
+            titulo="Sin recetas propias"
+            texto={esChef ? "Creá tu primera receta desde el botón Nueva receta." : "No hay recetas asociadas a tu usuario."}
+          />
+        </div>
+      )}
+      {misRecetas.length > 0 && recetasFiltradas.length === 0 && (
+        <div className="p-5">
+          <EstadoVacio titulo="Sin resultados" texto="No hay recetas que coincidan con los filtros." />
+        </div>
+      )}
+
+      <Modal abierto={Boolean(modal)} titulo={modal?.receta ? "Editar receta" : "Nueva receta"} alCerrar={() => setModal(null)}>
         <FormularioReceta categorias={categorias} recetaInicial={modal?.receta} onSubmit={guardar} />
       </Modal>
       <Modal abierto={Boolean(recetaAEliminar)} titulo="Eliminar receta" alCerrar={() => setRecetaAEliminar(null)} tamano="compacto">
@@ -167,5 +249,3 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
     </section>
   );
 }
-
-
