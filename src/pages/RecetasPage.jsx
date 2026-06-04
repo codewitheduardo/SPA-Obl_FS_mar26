@@ -1,5 +1,5 @@
 import { BookOpen, ChefHat, Clock, Tags } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import api from "../api/api.js";
@@ -9,36 +9,12 @@ import EncabezadoPagina from "../components/EncabezadoPagina.jsx";
 import EstadoVacio from "../components/EstadoVacio.jsx";
 import MensajeError from "../components/MensajeError.jsx";
 import { actualizarFiltrosRecetas, guardarErrorRecetas, guardarRecetas, iniciarCargaRecetas } from "../features/recetasSlice.js";
+import { completarAutorReceta, obtenerIdCategoriaReceta, obtenerIdReceta } from "../utils/recetas.js";
 
 const textoIngredientes = (ingredientes) => (Array.isArray(ingredientes) ? ingredientes.join(" ") : String(ingredientes || ""));
-const idCategoriaReceta = (receta) => receta.categoriaId?._id || receta.categoriaId;
 const extraerRecetas = (respuesta) => {
   const cuerpoRespuesta = respuesta.data?.data || respuesta.data;
   return cuerpoRespuesta?.results || cuerpoRespuesta || [];
-};
-const extraerLista = (respuesta) => {
-  const cuerpoRespuesta = respuesta.data?.data || respuesta.data;
-  return cuerpoRespuesta?.results || cuerpoRespuesta?.usuarios || cuerpoRespuesta || [];
-};
-const obtenerIdUsuario = (usuario) => String(usuario?._id || usuario?.id || "");
-const completarUsuarioAutor = ({ receta, recetaPropia, usuarioActual, usuarios }) => {
-  const autorDesdeUsuario = typeof receta.usuario === "object" ? receta.usuario : null;
-  const autorDesdeUsuarioId = typeof receta.usuarioId === "object" ? receta.usuarioId : null;
-  const autorBase = autorDesdeUsuario || autorDesdeUsuarioId || null;
-  const autorId = autorBase?._id || autorBase?.id || receta.usuarioId || receta.usuario || receta.autorId || "";
-  const usuarioEncontradoPorId = usuarios.find((usuario) => obtenerIdUsuario(usuario) === String(autorId || ""));
-  const esUsuarioActual = autorId && (String(usuarioActual?._id || usuarioActual?.id || "") === String(autorId));
-
-  if (autorBase || usuarioEncontradoPorId || esUsuarioActual || recetaPropia) {
-    return {
-      ...(esUsuarioActual ? usuarioActual : {}),
-      ...(usuarioEncontradoPorId || {}),
-      ...(recetaPropia?.usuario || {}),
-      ...(typeof recetaPropia?.usuarioId === "object" ? recetaPropia.usuarioId : {}),
-      ...(autorBase || {}),
-    };
-  }
-  return null;
 };
 
 export default function Recetas() {
@@ -47,7 +23,6 @@ export default function Recetas() {
   const { items, misRecetas, filtros, cargando, error } = useSelector((state) => state.recetas);
   const categorias = useSelector((state) => state.categorias.items);
   const usuario = useSelector((state) => state.auth.usuario);
-  const [usuarios, setUsuarios] = useState([]);
   const busquedaGeneral = searchParams.get("buscar")?.toLowerCase() || "";
 
   useEffect(() => {
@@ -63,30 +38,22 @@ export default function Recetas() {
     cargarRecetas();
   }, [dispatch]);
 
-  useEffect(() => {
-    const cargarUsuarios = async () => {
-      try {
-        const respuesta = await api.get("/usuarios");
-        const usuariosRespuesta = extraerLista(respuesta);
-        setUsuarios(Array.isArray(usuariosRespuesta) ? usuariosRespuesta : []);
-      } catch {
-        setUsuarios([]);
-      }
-    };
-    cargarUsuarios();
-  }, []);
+  const recetasFiltradas = items.filter((receta) => {
+    const categoriaId = obtenerIdCategoriaReceta(receta);
+    const nombreCategoria = receta.categoriaId?.nombre || categorias.find((categoria) => categoria.id === categoriaId || categoria._id === categoriaId)?.nombre || "";
 
-  const recetasFiltradas = items.filter((receta) =>
-    (!busquedaGeneral ||
-      receta.titulo.toLowerCase().includes(busquedaGeneral) ||
-      textoIngredientes(receta.ingredientes).toLowerCase().includes(busquedaGeneral) ||
-      (receta.categoriaId?.nombre || categorias.find((c) => c.id === idCategoriaReceta(receta) || c._id === idCategoriaReceta(receta))?.nombre || "").toLowerCase().includes(busquedaGeneral)) &&
-    receta.titulo.toLowerCase().includes(filtros.titulo.toLowerCase()) &&
-    (!filtros.categoriaId || idCategoriaReceta(receta) === filtros.categoriaId) &&
-    (!filtros.dificultad || receta.dificultad === filtros.dificultad) &&
-    (!filtros.tiempoMaximo || Number(receta.tiempoPreparacion) <= Number(filtros.tiempoMaximo)) &&
-    (!filtros.ingrediente || textoIngredientes(receta.ingredientes).toLowerCase().includes(filtros.ingrediente.toLowerCase())),
-  );
+    return (
+      (!busquedaGeneral ||
+        receta.titulo.toLowerCase().includes(busquedaGeneral) ||
+        textoIngredientes(receta.ingredientes).toLowerCase().includes(busquedaGeneral) ||
+        nombreCategoria.toLowerCase().includes(busquedaGeneral)) &&
+      receta.titulo.toLowerCase().includes(filtros.titulo.toLowerCase()) &&
+      (!filtros.categoriaId || categoriaId === filtros.categoriaId) &&
+      (!filtros.dificultad || receta.dificultad === filtros.dificultad) &&
+      (!filtros.tiempoMaximo || Number(receta.tiempoPreparacion) <= Number(filtros.tiempoMaximo)) &&
+      (!filtros.ingrediente || textoIngredientes(receta.ingredientes).toLowerCase().includes(filtros.ingrediente.toLowerCase()))
+    );
+  });
 
   const tiempoPromedio = items.length
     ? Math.round(items.reduce((total, receta) => total + Number(receta.tiempoPreparacion || 0), 0) / items.length)
@@ -113,7 +80,6 @@ export default function Recetas() {
         descripcion="Recetas internas de Cook Book con detalle, comentarios y valoraciones."
       />
 
-      {/* Stats */}
       <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {metricas.map(({ titulo, valor, icono: Icono, color }) => (
           <article key={titulo} className="rounded-2xl border border-stone-200 bg-white p-4 shadow-card">
@@ -126,7 +92,6 @@ export default function Recetas() {
         ))}
       </div>
 
-      {/* Búsqueda activa */}
       {busquedaGeneral && (
         <p className="mb-4 rounded-xl border border-orange-100 bg-orange-50 px-4 py-3 text-sm font-medium text-orange-700">
           Resultados para: <span className="font-bold">"{searchParams.get("buscar")}"</span>
@@ -150,14 +115,16 @@ export default function Recetas() {
 
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {recetasFiltradas.map((receta) => {
-          const recetaId = receta._id || receta.id;
-          const recetaPropia = misRecetas.find((item) => (item._id || item.id) === recetaId);
-          const usuarioReceta = completarUsuarioAutor({ receta, recetaPropia, usuarioActual: usuario, usuarios });
+          const recetaId = obtenerIdReceta(receta);
+          const categoriaId = obtenerIdCategoriaReceta(receta);
+          const recetaPropia = misRecetas.find((item) => obtenerIdReceta(item) === recetaId);
+          const usuarioReceta = completarAutorReceta(recetaPropia || receta, usuario);
+
           return (
             <TarjetaReceta
               key={recetaId}
               receta={{ ...receta, usuario: usuarioReceta }}
-              categoria={receta.categoriaId?.nombre ? receta.categoriaId : categorias.find((c) => c.id === idCategoriaReceta(receta) || c._id === idCategoriaReceta(receta))}
+              categoria={receta.categoriaId?.nombre ? receta.categoriaId : categorias.find((c) => c.id === categoriaId || c._id === categoriaId)}
               usuarioActual={usuario}
               compacto
             />

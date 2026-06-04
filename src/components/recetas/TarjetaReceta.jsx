@@ -5,55 +5,53 @@ import { toast } from "react-toastify";
 import { formatearDificultad, obtenerEstilosDificultad } from "../../utils/formateadores.js";
 import Boton from "../Boton.jsx";
 import Insignia from "../Insignia.jsx";
-import { esRecetaBorrador } from "../../utils/recetas.js";
+import { esRecetaBorrador, obtenerId, obtenerIdAutorReceta, obtenerIdReceta, obtenerAutorReceta } from "../../utils/recetas.js";
 
-const camposImagenReceta = ["imagenUrl", "imagen"];
-const camposUsuarioReceta = ["usuarioId", "usuario"];
-const camposFotoUsuario = ["foto", "fotoUrl"];
+const obtenerImagenReceta = (receta) => receta.imagenUrl || receta.imagen || "";
 
-const obtenerPrimerCampo = (objeto, campos) => campos.map((campo) => objeto?.[campo]).find(Boolean);
-const obtenerUrlImagen = (receta) => obtenerPrimerCampo(receta, camposImagenReceta) || "";
-const obtenerUsuarioReceta = (receta) =>
-  camposUsuarioReceta.map((campo) => receta?.[campo]).find((usuario) => usuario && typeof usuario === "object") || null;
-const obtenerId = (valor) => (typeof valor === "object" ? valor?._id || valor?.id || "" : valor || "");
-const obtenerIdUsuarioReceta = (receta) => obtenerId(receta.usuarioId) || obtenerId(receta.usuario);
-const obtenerFotosUsuario = (usuario = {}) =>
-  camposFotoUsuario.map((campo) => usuario?.[campo]).filter(Boolean).filter((url, i, l) => l.indexOf(url) === i);
-const normalizarTexto = (v) => String(v || "").trim().toLowerCase();
-const sonTextosIguales = (a, b) => {
-  const ta = normalizarTexto(a), tb = normalizarTexto(b);
-  return Boolean(ta && tb && ta === tb);
+const obtenerFotosAutor = (autorReceta = {}, usuarioActual = {}, usarFotoActual = false) =>
+  [autorReceta.foto, autorReceta.fotoUrl, ...(usarFotoActual ? [usuarioActual.foto, usuarioActual.fotoUrl] : [])]
+    .filter(Boolean)
+    .filter((url, indice, lista) => lista.indexOf(url) === indice);
+
+const normalizarTexto = (valor) => String(valor || "").trim().toLowerCase();
+
+const sonTextosIguales = (valorA, valorB) => {
+  const textoA = normalizarTexto(valorA);
+  const textoB = normalizarTexto(valorB);
+  return Boolean(textoA && textoB && textoA === textoB);
 };
-const esMismoUsuario = (uReceta, uActual, autorId) => {
-  const idActual = String(obtenerId(uActual));
-  const idAutor = String(autorId || obtenerId(uReceta));
+
+const esUsuarioActual = (autorReceta, usuarioActual, autorId) => {
+  const idActual = String(obtenerId(usuarioActual));
+  const idAutor = String(autorId || obtenerId(autorReceta));
   if (idActual && idAutor && idActual === idAutor) return true;
+
   return (
-    sonTextosIguales(uReceta?.email || uReceta?.correo, uActual?.email || uActual?.correo) ||
-    sonTextosIguales(uReceta?.nombre, uActual?.nombre)
+    sonTextosIguales(autorReceta?.email || autorReceta?.correo, usuarioActual?.email || usuarioActual?.correo) ||
+    sonTextosIguales(autorReceta?.nombre, usuarioActual?.nombre)
   );
 };
 
 export default function TarjetaReceta({ receta, categoria, usuarioActual, editable = false, compacto = false, onEditar, onEliminar }) {
   const [indiceFotoAutor, setIndiceFotoAutor] = useState(0);
-  const imagen = obtenerUrlImagen(receta);
-  const usuarioDesdeReceta = obtenerUsuarioReceta(receta);
-  const autorId = String(obtenerIdUsuarioReceta(receta) || "");
-  const usaPerfilActual = esMismoUsuario(usuarioDesdeReceta, usuarioActual, autorId) || editable;
-  const usuarioReceta = usaPerfilActual ? { ...usuarioActual, ...usuarioDesdeReceta } : usuarioDesdeReceta;
-  const autor = usuarioReceta?.nombre || "Comunidad";
-  const fotosAutor = [
-    ...obtenerFotosUsuario(usuarioReceta),
-    ...(usaPerfilActual ? obtenerFotosUsuario(usuarioActual) : []),
-  ].filter((url, i, l) => url && l.indexOf(url) === i);
+  const imagen = obtenerImagenReceta(receta);
+  const autorDesdeReceta = obtenerAutorReceta(receta);
+  const autorId = String(obtenerIdAutorReceta(receta));
+  const esRecetaPropia = editable || esUsuarioActual(autorDesdeReceta, usuarioActual, autorId);
+  const autorReceta = esRecetaPropia ? { ...usuarioActual, ...autorDesdeReceta } : autorDesdeReceta;
+  const autor = autorReceta?.nombre || "Comunidad";
+  const fotosAutor = obtenerFotosAutor(autorReceta, usuarioActual, esRecetaPropia);
   const fotoAutor = fotosAutor[indiceFotoAutor] || "";
   const inicialAutor = autor?.charAt(0)?.toUpperCase() || "C";
-  const recetaId = receta._id || receta.id;
+  const recetaId = obtenerIdReceta(receta);
   const rutaDetalle = `/recetas/${recetaId}`;
   const altoImagen = compacto ? "h-44" : "h-52";
   const esBorrador = esRecetaBorrador(receta);
 
-  useEffect(() => { setIndiceFotoAutor(0); }, [usuarioReceta?.foto, usuarioReceta?.fotoUrl]);
+  useEffect(() => {
+    setIndiceFotoAutor(0);
+  }, [autorReceta?.foto, autorReceta?.fotoUrl]);
 
   const compartirReceta = async () => {
     const url = `${window.location.origin}${rutaDetalle}`;
@@ -67,8 +65,6 @@ export default function TarjetaReceta({ receta, categoria, usuarioActual, editab
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:border-stone-300 hover:shadow-card-hover">
-
-      {/* Imagen */}
       <div className={`relative overflow-hidden ${altoImagen} shrink-0`}>
         {imagen ? (
           <img
@@ -90,10 +86,7 @@ export default function TarjetaReceta({ receta, categoria, usuarioActual, editab
         </div>
       </div>
 
-      {/* Contenido */}
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-
-        {/* Autor */}
         <div className="mb-3 flex items-center gap-2">
           {fotoAutor ? (
             <img
@@ -101,7 +94,7 @@ export default function TarjetaReceta({ receta, categoria, usuarioActual, editab
               alt={autor}
               referrerPolicy="no-referrer"
               className="h-6 w-6 rounded-full object-cover ring-1 ring-stone-200"
-              onError={() => setIndiceFotoAutor((a) => a + 1)}
+              onError={() => setIndiceFotoAutor((actual) => actual + 1)}
             />
           ) : (
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100 text-[10px] font-bold text-orange-700">
@@ -110,22 +103,19 @@ export default function TarjetaReceta({ receta, categoria, usuarioActual, editab
           )}
           <span className="min-w-0 truncate text-xs text-stone-500">
             <span className="font-semibold text-stone-600">{autor}</span>
-            {" · "}
+            {" / "}
             {categoria?.nombre || "Sin categoria"}
           </span>
         </div>
 
-        {/* Título */}
         <h3 className="mb-2 line-clamp-2 text-[1.05rem] font-black leading-snug text-stone-900 transition-colors group-hover:text-orange-700">
           {receta.titulo}
         </h3>
 
-        {/* Descripción */}
         <p className="line-clamp-2 text-sm leading-6 text-stone-500">
           {receta.descripcion || "Esta receta todavia no tiene descripcion cargada."}
         </p>
 
-        {/* Stats */}
         <div className="mt-4 grid grid-cols-3 divide-x divide-stone-100 rounded-xl border border-stone-100 bg-stone-50 text-center">
           <div className="px-2 py-2.5">
             <Clock size={12} className="mx-auto mb-1 text-orange-500" />
@@ -144,7 +134,6 @@ export default function TarjetaReceta({ receta, categoria, usuarioActual, editab
           </div>
         </div>
 
-        {/* Acciones */}
         <div className="mt-4 border-t border-stone-100 pt-4">
           {editable ? (
             <>

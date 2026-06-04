@@ -11,40 +11,7 @@ import Modal from "../components/Modal.jsx";
 import api from "../api/api.js";
 import { agregarReceta, actualizarReceta, quitarReceta } from "../features/recetasSlice.js";
 import ConfirmacionEliminarReceta from "../components/recetas/ConfirmacionEliminarReceta.jsx";
-
-const crearFormDataReceta = (datos) => {
-  const formData = new FormData();
-  const ingredientesReceta = Array.isArray(datos.ingredientes) ? datos.ingredientes : String(datos.ingredientes || "").split(",").map((ingrediente) => ingrediente.trim()).filter(Boolean);
-  const pasosReceta = Array.isArray(datos.pasos) ? datos.pasos : String(datos.pasos || "").split(".").map((paso) => paso.trim()).filter(Boolean);
-  formData.append("titulo", datos.titulo);
-  formData.append("descripcion", datos.descripcion);
-  ingredientesReceta.forEach((ingrediente) => formData.append("ingredientes", ingrediente));
-  pasosReceta.forEach((paso) => formData.append("pasos", paso));
-  formData.append("tiempoPreparacion", Number(datos.tiempoPreparacion));
-  formData.append("porciones", Number(datos.porciones));
-  formData.append("dificultad", datos.dificultad);
-  formData.append("categoriaId", datos.categoriaId);
-  formData.append("estado", datos.estado || "publicada");
-  if (datos.imagen instanceof File) formData.append("imagen", datos.imagen);
-  return formData;
-};
-
-const extraerRecetaRespuesta = (respuesta) => {
-  const cuerpoRespuesta = respuesta.data?.data || respuesta.data;
-  return cuerpoRespuesta?.receta || cuerpoRespuesta;
-};
-
-const normalizarRecetaGuardada = (respuesta, datos, recetaAnterior = {}) => ({
-  ...recetaAnterior,
-  ...extraerRecetaRespuesta(respuesta),
-  estado: datos.estado,
-});
-
-const completarUsuarioReceta = (receta, usuarioActual) => {
-  const usuarioDesdeReceta = typeof receta.usuario === "object" ? receta.usuario : {};
-  const usuarioDesdeUsuarioId = typeof receta.usuarioId === "object" ? receta.usuarioId : {};
-  return { ...usuarioActual, ...usuarioDesdeReceta, ...usuarioDesdeUsuarioId };
-};
+import { completarAutorReceta, crearFormDataReceta, prepararRecetaGuardada } from "../utils/recetas.js";
 
 export default function MisRecetas() {
   const dispatch = useDispatch();
@@ -61,14 +28,16 @@ export default function MisRecetas() {
       toast.info("Tu rol lector no permite crear recetas");
       return;
     }
+
     try {
       if (modal?.receta) {
-        const respuesta = await api.put(`/recetas/${modal.receta._id || modal.receta.id}`, crearFormDataReceta(datos));
-        dispatch(actualizarReceta(normalizarRecetaGuardada(respuesta, datos, modal.receta)));
+        const id = modal.receta._id || modal.receta.id;
+        const respuesta = await api.put(`/recetas/${id}`, crearFormDataReceta(datos));
+        dispatch(actualizarReceta(prepararRecetaGuardada(respuesta, datos, modal.receta)));
         toast.success("Receta actualizada");
       } else {
         const respuesta = await api.post("/recetas", crearFormDataReceta(datos));
-        dispatch(agregarReceta(normalizarRecetaGuardada(respuesta, datos)));
+        dispatch(agregarReceta(prepararRecetaGuardada(respuesta, datos)));
         toast.success("Receta creada");
       }
       setModal(null);
@@ -79,6 +48,7 @@ export default function MisRecetas() {
 
   const confirmarEliminacion = async () => {
     if (!recetaAEliminar) return;
+
     try {
       setEliminando(true);
       const id = recetaAEliminar._id || recetaAEliminar.id;
@@ -107,14 +77,14 @@ export default function MisRecetas() {
 
       {!esChef && (
         <p className="mb-5 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700">
-          Estás usando un perfil lector. Para crear recetas necesitarías ingresar con un usuario chef.
+          Estas usando un perfil lector. Para crear recetas necesitarias ingresar con un usuario chef.
         </p>
       )}
 
       {misRecetas.length === 0 && (
         <EstadoVacio
-          titulo="Todavia no tenés recetas"
-          texto={esChef ? "Creá tu primer documento principal desde el botón Nueva receta." : "Cuando tengas recetas asociadas a tu usuario, van a aparecer en esta seccion."}
+          titulo="Todavia no tenes recetas"
+          texto={esChef ? "Crea tu primer documento principal desde el boton Nueva receta." : "Cuando tengas recetas asociadas a tu usuario, van a aparecer en esta seccion."}
         />
       )}
 
@@ -122,7 +92,7 @@ export default function MisRecetas() {
         {misRecetas.map((receta) => (
           <TarjetaReceta
             key={receta._id || receta.id}
-            receta={{ ...receta, usuario: completarUsuarioReceta(receta, usuario) }}
+            receta={{ ...receta, usuario: completarAutorReceta(receta, usuario) }}
             categoria={categorias.find((c) => c.id === receta.categoriaId || c._id === receta.categoriaId || c._id === receta.categoriaId?._id)}
             usuarioActual={usuario}
             editable

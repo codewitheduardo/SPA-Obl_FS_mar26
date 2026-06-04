@@ -11,36 +11,8 @@ import EstadoVacio from "../EstadoVacio.jsx";
 import Modal from "../Modal.jsx";
 import Selector from "../Selector.jsx";
 import FormularioReceta from "../recetas/FormularioReceta.jsx";
-import { esRecetaBorrador } from "../../utils/recetas.js";
+import { crearFormDataReceta, esRecetaBorrador, prepararRecetaGuardada } from "../../utils/recetas.js";
 import ConfirmacionEliminarReceta from "../recetas/ConfirmacionEliminarReceta.jsx";
-
-const crearFormDataReceta = (datos) => {
-  const formData = new FormData();
-  const ingredientesReceta = Array.isArray(datos.ingredientes) ? datos.ingredientes : String(datos.ingredientes || "").split(",").map((ingrediente) => ingrediente.trim()).filter(Boolean);
-  const pasosReceta = Array.isArray(datos.pasos) ? datos.pasos : String(datos.pasos || "").split(".").map((paso) => paso.trim()).filter(Boolean);
-  formData.append("titulo", datos.titulo);
-  formData.append("descripcion", datos.descripcion);
-  ingredientesReceta.forEach((ingrediente) => formData.append("ingredientes", ingrediente));
-  pasosReceta.forEach((paso) => formData.append("pasos", paso));
-  formData.append("tiempoPreparacion", Number(datos.tiempoPreparacion));
-  formData.append("porciones", Number(datos.porciones));
-  formData.append("dificultad", datos.dificultad);
-  formData.append("categoriaId", datos.categoriaId);
-  formData.append("estado", datos.estado || "publicada");
-  if (datos.imagen instanceof File) formData.append("imagen", datos.imagen);
-  return formData;
-};
-
-const extraerRecetaRespuesta = (respuesta) => {
-  const cuerpoRespuesta = respuesta.data?.data || respuesta.data;
-  return cuerpoRespuesta?.receta || cuerpoRespuesta;
-};
-
-const normalizarRecetaGuardada = (respuesta, datos, recetaAnterior = {}) => ({
-  ...recetaAnterior,
-  ...extraerRecetaRespuesta(respuesta),
-  estado: datos.estado,
-});
 
 export default function GestorRecetasDashboard({ misRecetas, categorias }) {
   const dispatch = useDispatch();
@@ -62,6 +34,7 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
 
   const eliminar = async () => {
     if (!recetaAEliminar) return;
+
     try {
       setEliminando(true);
       const id = recetaAEliminar._id || recetaAEliminar.id;
@@ -81,15 +54,16 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
       toast.info("Tu rol lector no permite crear recetas");
       return;
     }
+
     try {
       if (modal?.receta) {
         const id = modal.receta._id || modal.receta.id;
         const respuesta = await api.put(`/recetas/${id}`, crearFormDataReceta(datos));
-        dispatch(actualizarReceta(normalizarRecetaGuardada(respuesta, datos, modal.receta)));
+        dispatch(actualizarReceta(prepararRecetaGuardada(respuesta, datos, modal.receta)));
         toast.success("Receta actualizada");
       } else {
         const respuesta = await api.post("/recetas", crearFormDataReceta(datos));
-        dispatch(agregarReceta(normalizarRecetaGuardada(respuesta, datos)));
+        dispatch(agregarReceta(prepararRecetaGuardada(respuesta, datos)));
         toast.success("Receta creada");
       }
       setModal(null);
@@ -100,11 +74,10 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
 
   return (
     <section className="rounded-2xl border border-stone-200 bg-white shadow-card">
-      {/* Header */}
       <div className="flex flex-col justify-between gap-4 border-b border-stone-100 px-5 py-5 sm:flex-row sm:items-center">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-orange-600">Documento principal</p>
-          <h3 className="mt-1 text-xl font-black text-stone-900">Gestión de mis recetas</h3>
+          <h3 className="mt-1 text-xl font-black text-stone-900">Gestion de mis recetas</h3>
           <p className="mt-0.5 text-sm text-stone-500">
             {esChef
               ? "Alta, filtros, edicion y eliminacion desde una unica interfaz."
@@ -122,13 +95,12 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
         )}
       </div>
 
-      {/* Filtros */}
       <div className="grid gap-3 bg-stone-50/60 px-5 py-4 sm:grid-cols-3">
         <CampoTexto
           label="Buscar por titulo"
           value={filtros.titulo}
           onChange={(e) => setFiltros((actuales) => ({ ...actuales, titulo: e.target.value }))}
-          placeholder="Escribí un título..."
+          placeholder="Escribi un titulo..."
         />
         <Selector
           label="Categoria"
@@ -154,7 +126,6 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
         </Selector>
       </div>
 
-      {/* Tabla */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[800px] text-left text-sm">
           <thead>
@@ -225,12 +196,11 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
         </table>
       </div>
 
-      {/* Estados vacíos */}
       {misRecetas.length === 0 && (
         <div className="p-5">
           <EstadoVacio
             titulo="Sin recetas propias"
-            texto={esChef ? "Creá tu primera receta desde el botón Nueva receta." : "No hay recetas asociadas a tu usuario."}
+            texto={esChef ? "Crea tu primera receta desde el boton Nueva receta." : "No hay recetas asociadas a tu usuario."}
           />
         </div>
       )}
