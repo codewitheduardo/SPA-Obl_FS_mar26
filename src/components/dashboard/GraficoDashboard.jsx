@@ -42,34 +42,29 @@ export default function GraficoDashboard({ titulo, datos, tipo = "bar" }) {
 
   const datosChartJs = {
     labels: datosGrafico.map((item) => item.nombre),
-    datasets: [
-      {
-        label: titulo,
-        data: datosGrafico.map((item) => item.valor),
-        backgroundColor: tipo === "line" ? "rgba(251, 146, 60, 0.16)" : coloresGrafico,
-        borderColor: tipo === "line" ? "#fb923c" : "#ffffff",
-        borderWidth: tipo === "doughnut" ? 4 : 2,
-        borderRadius: tipo === "bar" ? 12 : 0,
-        cutout: tipo === "doughnut" ? "68%" : undefined,
-        fill: tipo === "line",
-        tension: 0.4,
-        pointBackgroundColor: "#fb923c",
-        pointBorderColor: "#fff7ed",
-        pointBorderWidth: 3,
-        pointRadius: 4,
-      },
-    ],
+    datasets: [{
+      label: titulo,
+      data: datosGrafico.map((item) => item.valor),
+      backgroundColor: tipo === "line" ? "rgba(251, 146, 60, 0.16)" : coloresGrafico,
+      borderColor: tipo === "line" ? "#fb923c" : "#ffffff",
+      borderWidth: tipo === "doughnut" ? 4 : 2,
+      borderRadius: tipo === "bar" ? 12 : 0,
+      cutout: tipo === "doughnut" ? "68%" : undefined,
+      fill: tipo === "line",
+      tension: 0.4,
+      pointBackgroundColor: "#fb923c",
+      pointBorderColor: "#fff7ed",
+      pointBorderWidth: 3,
+      pointRadius: 4,
+    }],
   };
 
   const opciones = {
     ...opcionesBase,
-    scales:
-      tipo === "doughnut"
-        ? undefined
-        : {
-            x: { grid: { display: false }, ticks: { color: "#78716c", font: { weight: "700" } } },
-            y: { beginAtZero: true, suggestedMax: maximo + 1, grid: { color: "#f1f5f9" }, ticks: { color: "#78716c", precision: 0 } },
-          },
+    scales: tipo === "doughnut" ? undefined : {
+      x: { grid: { display: false }, ticks: { color: "#78716c", font: { weight: "700" } } },
+      y: { beginAtZero: true, suggestedMax: maximo + 1, grid: { color: "#f1f5f9" }, ticks: { color: "#78716c", precision: 0 } },
+    },
   };
 
   return (

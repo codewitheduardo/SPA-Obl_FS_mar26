@@ -4,14 +4,14 @@
 
 :root {
   color: #1c1917;
-  background: #fafaf9;
+  background: #f9f8f6;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #fafaf9;
+  background: #f9f8f6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -25,26 +25,30 @@ textarea {
 
 ::selection {
   background: #fed7aa;
-  color: #7c2d12;
+  color: #9a3412;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #e7e5e4 #fafaf9;
+  scrollbar-color: #e7e5e4 #f9f8f6;
 }
 
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #fafaf9;
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
   background: #d6d3d1;
   border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
 }
 
 .line-clamp-2 {
@@ -59,4 +63,9 @@ textarea {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Transición suave en imágenes */
+img {
+  transition: opacity 0.2s ease;
 }

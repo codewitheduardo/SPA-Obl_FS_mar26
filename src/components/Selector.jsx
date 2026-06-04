@@ -5,10 +5,10 @@ export default function Selector({ label, error, children, className = "", ...pr
         <span className="mb-1.5 block text-sm font-semibold text-stone-700">{label}</span>
       )}
       <select
-        className={`w-full min-w-0 cursor-pointer rounded-xl border bg-white px-4 py-2.5 text-sm text-stone-900 outline-none transition-all duration-150 focus:ring-2 focus:ring-orange-200 ${
+        className={`w-full min-w-0 cursor-pointer rounded-xl border bg-white px-4 py-2.5 text-sm text-stone-900 outline-none transition-colors duration-150 ${
           error
-            ? "border-rose-300 focus:border-rose-400 focus:ring-rose-100"
-            : "border-stone-200 focus:border-orange-300"
+            ? "border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+            : "border-stone-200 focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
         }`}
         {...props}
       >

@@ -20,7 +20,13 @@ const obtenerEtiquetaValoracion = (valoracion) => {
 
 const obtenerFotoUsuarioComentario = (comentario) => {
   const usuarioComentario = comentario.usuario || {};
-  return usuarioComentario.fotoUrl || usuarioComentario.foto || comentario.usuarioFoto || comentario.fotoUsuario || "";
+  return (
+    usuarioComentario.fotoUrl ||
+    usuarioComentario.foto ||
+    comentario.usuarioFoto ||
+    comentario.fotoUsuario ||
+    ""
+  );
 };
 
 export default function ComentariosReceta({ recetaId }) {
@@ -30,10 +36,7 @@ export default function ComentariosReceta({ recetaId }) {
   const [promedioValoracion, setPromedioValoracion] = useState(0);
   const [error, setError] = useState(null);
   const [comentarioEditando, setComentarioEditando] = useState(null);
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm({
-    resolver: joiResolver(comentarioSchema),
-    defaultValues: { valoracion: "" },
-  });
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm({ resolver: joiResolver(comentarioSchema), defaultValues: { valoracion: "" } });
   const valoracionFormulario = Number(watch("valoracion") || 0);
 
   const cargarComentarios = async () => {
@@ -87,6 +90,7 @@ export default function ComentariosReceta({ recetaId }) {
 
   return (
     <section id="comentarios" className="mt-6 scroll-mt-24 rounded-2xl border border-stone-200 bg-white p-5 shadow-card sm:p-6">
+
       {/* Header */}
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-stone-100 pb-5">
         <div>
@@ -150,7 +154,7 @@ export default function ComentariosReceta({ recetaId }) {
       <div className="space-y-3">
         {comentarios.length === 0 && (
           <p className="rounded-xl border border-dashed border-stone-200 bg-stone-50 p-6 text-center text-sm text-stone-500">
-            Todavia no hay comentarios. Se el primero en valorar esta receta.
+            Todavia no hay comentarios. Sé el primero en valorar esta receta.
           </p>
         )}
         {comentarios.map((comentario) => {
@@ -164,12 +168,17 @@ export default function ComentariosReceta({ recetaId }) {
           return (
             <article
               key={comentario._id || comentario.id}
-              className="rounded-xl border border-stone-100 bg-white p-4 shadow-card transition-all hover:border-orange-100 hover:shadow-card-hover"
+              className="rounded-xl border border-stone-100 bg-white p-4 shadow-card transition-all hover:border-stone-200 hover:shadow-card-hover"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex min-w-0 gap-3">
                   {fotoUsuario ? (
-                    <img src={fotoUsuario} alt={nombreUsuario} className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-stone-100" />
+                    <img
+                      src={fotoUsuario}
+                      alt={nombreUsuario}
+                      referrerPolicy="no-referrer"
+                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-stone-100"
+                    />
                   ) : (
                     <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-orange-100 font-bold text-orange-700">
                       {nombreUsuario.charAt(0).toUpperCase()}

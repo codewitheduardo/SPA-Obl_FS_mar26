@@ -49,7 +49,7 @@ export default function LayoutDashboard() {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-[#f9f8f6]">
       <BarraLateral />
       <div className="min-w-0 px-4 pb-12 pt-20 sm:px-5 md:ml-64 md:px-6 md:pt-6 lg:px-8">
         <BarraSuperior />

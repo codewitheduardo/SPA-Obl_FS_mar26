@@ -1,4 +1,4 @@
-import { ChefHat, Sparkles, BookOpen, Clock, Users, ChefHat as ChefIcon } from "lucide-react";
+import { ChefHat, Sparkles, BookOpen, Clock, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import Boton from "../components/Boton.jsx";
 
@@ -61,7 +61,7 @@ export default function Inicio() {
 
       {/* Imagen */}
       <div className="relative z-10 w-full max-w-md shrink-0 lg:max-w-[480px]">
-        <div className="relative overflow-hidden rounded-3xl shadow-[0_24px_60px_-10px_rgba(0,0,0,0.20)]">
+        <div className="relative overflow-hidden rounded-3xl shadow-[0_32px_80px_-12px_rgba(0,0,0,0.24),0_8px_24px_-4px_rgba(0,0,0,0.12)]">
           <img
             className="h-72 w-full object-cover sm:h-96 lg:h-[540px]"
             src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=900&q=80"
@@ -96,7 +96,7 @@ export default function Inicio() {
                   2 porciones
                 </span>
                 <span className="flex items-center gap-1.5 text-[11px] font-semibold text-white/70">
-                  <ChefIcon size={12} className="text-orange-400" />
+                  <ChefHat size={12} className="text-orange-400" />
                   Fácil
                 </span>
               </div>

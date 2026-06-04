@@ -10,6 +10,7 @@ const obtenerFotosUsuario = (usuario = {}) =>
     .filter(Boolean)
     .filter((url, indice, lista) => lista.indexOf(url) === indice);
 
+
 export default function BarraSuperior() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,15 +66,15 @@ export default function BarraSuperior() {
   const firmaNotificaciones = notificaciones.map((item) => `${item.id}:${item.detalle}`).join("|");
   const hayNovedades = firmaLeida !== firmaNotificaciones;
   const esPremium = usuario?.plan === "premium";
-  const fotosUsuario = obtenerFotosUsuario(usuario);
-  const fotoUsuario = fotosUsuario[indiceFoto] || "";
-
   const estilosNotificacion = {
     orange: "bg-orange-50 text-orange-600",
     emerald: "bg-emerald-50 text-emerald-600",
     rose: "bg-rose-50 text-rose-600",
     amber: "bg-amber-50 text-amber-600",
   };
+  const fotosUsuario = obtenerFotosUsuario(usuario);
+  const fotoUsuario = fotosUsuario[indiceFoto] || "";
+
 
   useEffect(() => {
     const texto = busqueda.trim();
@@ -145,7 +146,7 @@ export default function BarraSuperior() {
   };
 
   return (
-    <header className="mb-6 flex items-center gap-3 rounded-2xl border border-stone-200 bg-white px-4 py-3 shadow-card sm:px-5">
+    <header className="mb-6 flex items-center gap-3 rounded-2xl border border-stone-200/80 bg-white px-4 py-3 shadow-card-md sm:px-5">
       {/* Search */}
       <form
         onSubmit={buscar}

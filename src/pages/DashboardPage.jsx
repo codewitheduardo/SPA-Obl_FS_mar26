@@ -69,10 +69,12 @@ export default function Dashboard() {
   const [comentarios, setComentarios] = useState([]);
   const plan = usuario?.plan || "plus";
   const totalComentarios = comentarios.length;
+
   const recetasDelUsuario = misRecetas;
   const recetasPorCategoria = agruparRecetasPorCategoria(categorias, recetasDelUsuario);
   const actividadUltimosDias = crearActividadUltimosDias(recetasDelUsuario);
   const valorMaximoMetrica = Math.max(recetasDelUsuario.length, categorias.length, favoritos.length, totalComentarios, 1);
+
   const calcularProgresoMetrica = (valor) => Math.round((Number(valor || 0) / valorMaximoMetrica) * 100);
 
   useEffect(() => {
@@ -81,14 +83,10 @@ export default function Dashboard() {
       const respuestasComentarios = await Promise.allSettled(recetasConComentarios.map((receta) => api.get(`/recetas/${receta._id || receta.id}/comentarios`)));
       const comentariosConReceta = respuestasComentarios.flatMap((respuestaComentario, indice) => {
         if (respuestaComentario.status !== "fulfilled") return [];
-
         const receta = recetasConComentarios[indice];
         return extraerComentariosDeRespuesta(respuestaComentario.value).map((comentario) => ({
           ...comentario,
-          recetaOrigen: {
-            id: receta._id || receta.id,
-            titulo: receta.titulo,
-          },
+          recetaOrigen: { id: receta._id || receta.id, titulo: receta.titulo },
         }));
       });
       setComentarios(comentariosConReceta);
