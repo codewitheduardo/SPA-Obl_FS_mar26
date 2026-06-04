@@ -46,7 +46,7 @@ export default function TarjetaReceta({ receta, categoria, usuarioActual, editab
   const inicialAutor = autor?.charAt(0)?.toUpperCase() || "C";
   const recetaId = obtenerIdReceta(receta);
   const rutaDetalle = `/recetas/${recetaId}`;
-  const altoImagen = compacto ? "h-44" : "h-52";
+  const altoImagen = compacto ? "h-40 sm:h-44" : "h-44 sm:h-52";
   const esBorrador = esRecetaBorrador(receta);
 
   useEffect(() => {
@@ -141,9 +141,9 @@ export default function TarjetaReceta({ receta, categoria, usuarioActual, editab
                 <Boton variante="primario" className="w-full" type="button"><Eye size={15} /> Ver receta</Boton>
               </Link>
               <div className="mt-2 grid grid-cols-3 gap-2">
-                <Boton variante="outline" className="w-full px-2" type="button" onClick={() => onEditar?.(receta)}><Edit size={14} /></Boton>
-                <Boton variante="outline" className="w-full px-2" type="button" onClick={compartirReceta} disabled={esBorrador}><Share2 size={14} /></Boton>
-                <Boton variante="outline" className="w-full border-rose-100 px-2 text-rose-600 hover:bg-rose-50" type="button" onClick={() => onEliminar?.(receta)}><Trash2 size={14} /></Boton>
+                <Boton variante="outline" className="w-full px-2 py-2" type="button" onClick={() => onEditar?.(receta)}><Edit size={14} /></Boton>
+                <Boton variante="outline" className="w-full px-2 py-2" type="button" onClick={compartirReceta} disabled={esBorrador}><Share2 size={14} /></Boton>
+                <Boton variante="outline" className="w-full border-rose-100 px-2 py-2 text-rose-600 hover:bg-rose-50" type="button" onClick={() => onEliminar?.(receta)}><Trash2 size={14} /></Boton>
               </div>
             </>
           ) : (

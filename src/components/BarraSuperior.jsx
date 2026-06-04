@@ -155,7 +155,7 @@ export default function BarraSuperior() {
         <Search size={16} className="shrink-0 text-stone-400" />
         <input
           className="min-w-0 flex-1 bg-transparent text-sm font-medium text-stone-800 outline-none placeholder:text-stone-400"
-          placeholder="Buscar recetas, categorias o ingredientes..."
+          placeholder="Buscar..."
           value={busqueda}
           onChange={(evento) => setBusqueda(evento.target.value)}
         />

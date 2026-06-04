@@ -59,7 +59,7 @@ export default function ResultadoIA({ resultado, categorias = [], onUsar, onRege
         )}
 
         {/* Stats */}
-        <div className="mt-4 grid grid-cols-3 gap-3">
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div className="flex items-center gap-2.5 rounded-xl border border-stone-100 bg-white p-3 shadow-card">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-orange-500">
               <Clock size={16} />

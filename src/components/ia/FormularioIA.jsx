@@ -85,7 +85,7 @@ export default function FormularioIA({ onGenerar, cargando }) {
             Separalos con comas. Incluí cantidades si las conocés para una receta más precisa.
           </p>
           {/* Chips de ejemplo */}
-          <div className="mt-2 flex flex-wrap gap-1.5">
+          <div className="mt-2 flex max-w-full flex-wrap gap-1.5">
             {CHIPS_INGREDIENTES.map(({ label, value }) => (
               <button
                 key={label}

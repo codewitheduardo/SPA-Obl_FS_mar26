@@ -136,7 +136,7 @@ export default function ComentariosReceta({ recetaId }) {
             })}
           </div>
         </div>
-        <div className="grid gap-3 xl:grid-cols-[1fr_auto] xl:items-end">
+        <div className="grid min-w-0 gap-3 xl:grid-cols-[1fr_auto] xl:items-end">
           <AreaTexto label="Tu comentario" error={errors.texto?.message} {...register("texto")} />
           <input type="hidden" {...register("valoracion")} />
           <Boton className="w-full xl:w-auto" type="submit">

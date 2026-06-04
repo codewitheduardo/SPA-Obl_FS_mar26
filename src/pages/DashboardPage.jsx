@@ -99,7 +99,7 @@ export default function Dashboard() {
   return (
     <div>
       <EncabezadoPagina titulo="Dashboard de gestion general" descripcion="Alta de recetas, mis recetas, filtros, informe de uso del plan, cambio de plan, graficos y actividad del recetario." />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         <TarjetaMetrica titulo="Mis recetas" valor={recetasDelUsuario.length} detalle="Recetas creadas por vos" progreso={calcularProgresoMetrica(recetasDelUsuario.length)} icono={BookOpen} />
         <TarjetaMetrica titulo="Categorias cargadas" valor={categorias.length} detalle="Para organizar recetas" progreso={calcularProgresoMetrica(categorias.length)} icono={Tags} tono="emerald" />
         <TarjetaMetrica titulo="Favoritos externos" valor={favoritos.length} detalle="Guardados de TheMealDB" progreso={calcularProgresoMetrica(favoritos.length)} icono={Heart} tono="amber" />

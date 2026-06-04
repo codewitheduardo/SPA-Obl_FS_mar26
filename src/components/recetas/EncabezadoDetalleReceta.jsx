@@ -82,7 +82,7 @@ export default function EncabezadoDetalleReceta({ receta, categoria }) {
           </div>
 
           {/* Stats */}
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {stats.map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex items-center gap-3 rounded-xl border border-stone-100 bg-stone-50 p-3.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-orange-500 shadow-card ring-1 ring-stone-100">
