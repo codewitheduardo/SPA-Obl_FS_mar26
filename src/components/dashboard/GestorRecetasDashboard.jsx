@@ -22,6 +22,7 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
   const [eliminando, setEliminando] = useState(false);
   const [filtros, setFiltros] = useState({ titulo: "", categoriaId: "", dificultad: "" });
   const esChef = usuario?.rol === "chef";
+  const limiteAlcanzado = usuario?.plan !== "premium" && misRecetas.length >= 4;
 
   const recetasFiltradas = misRecetas.filter((receta) => {
     const categoriaId = receta.categoriaId?._id || receta.categoriaId;
@@ -85,8 +86,13 @@ export default function GestorRecetasDashboard({ misRecetas, categorias }) {
           </p>
         </div>
         {esChef ? (
-          <Boton className="w-full sm:w-auto" onClick={() => setModal({ tipo: "crear" })}>
-            <Plus size={16} /> Nueva receta
+          <Boton
+            className="w-full sm:w-auto"
+            onClick={() => setModal({ tipo: "crear" })}
+            disabled={limiteAlcanzado}
+            title={limiteAlcanzado ? "Alcanzaste el límite de recetas del plan plus" : undefined}
+          >
+            <Plus size={16} /> {limiteAlcanzado ? "Límite alcanzado" : "Nueva receta"}
           </Boton>
         ) : (
           <span className="inline-flex items-center rounded-full bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700 ring-1 ring-amber-100">
