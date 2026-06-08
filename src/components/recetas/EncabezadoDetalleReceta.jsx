@@ -1,6 +1,7 @@
 import { Clock, MessageCircle, Share2, User, Users, Utensils } from "lucide-react";
 import { toast } from "react-toastify";
 import { formatearDificultad, obtenerEstilosDificultad } from "../../utils/formateadores.js";
+import { esRecetaBorrador } from "../../utils/recetas.js";
 import Boton from "../Boton.jsx";
 import Insignia from "../Insignia.jsx";
 
@@ -8,6 +9,7 @@ export default function EncabezadoDetalleReceta({ receta, categoria }) {
   const imagen = receta.imagenUrl || receta.imagen;
   const autor = receta.usuarioId?.nombre || receta.usuario?.nombre || "Comunidad";
   const nombreCategoria = categoria?.nombre || "Sin categoria";
+  const esBorrador = esRecetaBorrador(receta);
 
   const compartir = async () => {
     try {
@@ -56,9 +58,11 @@ export default function EncabezadoDetalleReceta({ receta, categoria }) {
             <Insignia className="bg-stone-100 text-stone-600" title={nombreCategoria}>
               {nombreCategoria}
             </Insignia>
-            <Insignia className="bg-orange-50 text-orange-700 ring-1 ring-orange-100">
-              Cook Book
-            </Insignia>
+            {esBorrador && (
+              <Insignia className="bg-stone-900 text-white">
+                Borrador
+              </Insignia>
+            )}
           </div>
 
           {/* Título */}
@@ -76,7 +80,7 @@ export default function EncabezadoDetalleReceta({ receta, categoria }) {
                 <MessageCircle size={15} /> Comentar
               </Boton>
             </a>
-            <Boton variante="outline" type="button" className="px-5" onClick={compartir}>
+            <Boton variante="outline" type="button" className="px-5" onClick={compartir} disabled={esBorrador} title={esBorrador ? "Los borradores no se pueden compartir" : undefined}>
               <Share2 size={15} /> Compartir
             </Boton>
           </div>

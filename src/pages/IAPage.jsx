@@ -188,7 +188,7 @@ export default function IA() {
     setUltimoFormulario(datos);
 
     try {
-      const respuesta = await api.post("/ia/generar", { prompt: armarPrompt(datos) });
+      const respuesta = await api.post("/ia/generar", { prompt: armarPrompt(datos) }, { timeout: 35000 });
       const cuerpoRespuesta = respuesta.data?.data || respuesta.data;
       const resultadoGenerado = parsearRespuestaIA(cuerpoRespuesta, datos);
 
@@ -200,7 +200,10 @@ export default function IA() {
       setResultado(resultadoGenerado);
       toast.success("Receta generada correctamente");
     } catch (error) {
-      toast.error(error.message || "No se pudo conectar con la IA");
+      const mensaje = error.code === "ECONNABORTED"
+        ? "La IA tardó demasiado. Intentá de nuevo."
+        : error.message || "No se pudo conectar con la IA";
+      toast.error(mensaje);
     } finally {
       setCargando(false);
     }
