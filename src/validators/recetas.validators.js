@@ -69,6 +69,13 @@ export const recetaSchema = Joi.object({
     "any.only": "La visibilidad debe ser publicada o borrador",
     "any.required": "La visibilidad es obligatoria",
   }),
-  imagen: Joi.any().optional(),
+  imagen: Joi.any().optional().custom((value, helpers) => {
+    const file = value?.[0];
+    if (!file) return value;
+    if (!file.type?.startsWith("image/")) return helpers.error("any.invalid");
+    return value;
+  }).messages({
+    "any.invalid": "Debes seleccionar una imagen válida (JPG, PNG o WEBP)",
+  }),
 }).unknown(true);
 

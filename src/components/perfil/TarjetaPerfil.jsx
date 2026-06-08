@@ -29,6 +29,14 @@ export default function TarjetaPerfil({ usuario }) {
 
   const seleccionarArchivo = (archivo) => {
     if (!archivo) return;
+    if (!archivo.type?.startsWith("image/")) {
+      toast.error("Debes seleccionar una imagen válida (JPG, PNG o WEBP)");
+      return;
+    }
+    if (archivo.size > 5 * 1024 * 1024) {
+      toast.error("La imagen no puede superar los 5MB");
+      return;
+    }
     setArchivoSeleccionado(archivo);
     setPreview(URL.createObjectURL(archivo));
   };
