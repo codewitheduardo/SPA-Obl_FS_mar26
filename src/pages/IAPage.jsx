@@ -188,7 +188,7 @@ export default function IA() {
     setUltimoFormulario(datos);
 
     try {
-      const respuesta = await api.post("/ia/generar", { prompt: armarPrompt(datos) }, { timeout: 35000 });
+      const respuesta = await api.post("/ia/generar", { prompt: armarPrompt(datos) }, { timeout: 45000 });
       const cuerpoRespuesta = respuesta.data?.data || respuesta.data;
       const resultadoGenerado = parsearRespuestaIA(cuerpoRespuesta, datos);
 
